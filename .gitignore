@@ -55,13 +55,27 @@ ios/Pods/
 ios/.symlinks/
 ephemeral/
 
+# ML artifacts and datasets
+ml_model/training_data/
+*.keras
+*.h5
+*.onnx
+*.tflite
+!ml_model/models/model.tflite
+!ml_model/models/model_11class_baseline.tflite
+!ml_model/models/model_17class.tflite
+database/data/*.sqlite
+
 # IDE & Editor files
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+
+# OS
 .DS_Store
+Thumbs.db
 
 # Large ML Weights / Logs (if needed)
 *.log

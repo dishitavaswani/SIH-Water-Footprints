@@ -1,0 +1,17 @@
+almond
+banana
+cherry
+chilli
+coconut
+cucumber
+jowar
+lemon
+maize
+makhana
+papaya
+pearl_millet
+pineapple
+rice
+sugarcane
+tomato
+wheat
