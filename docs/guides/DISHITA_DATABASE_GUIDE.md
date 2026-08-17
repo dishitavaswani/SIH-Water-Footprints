@@ -92,6 +92,46 @@ git commit -m "feat: add cleaned water footprint dataset"
 git push origin feature/database
 ```
 
+## Copy-ready Antigravity prompts
+
+Open the project folder in Antigravity, check that the active branch is `feature/database`, and use one prompt at a time. Review all source and licence information yourself before accepting a data change.
+
+### Prompt 1 — inspect the data workspace
+
+```text
+You are working in SIH-Water-Footprints on branch feature/database. Inspect only database/ and the root README.md. Do not change files. Summarize the expected data flow from raw source to cleaned data to lookup result. List the schemas, scripts, data columns, and test cases that should be created. Do not inspect or modify other teammates' folders.
+```
+
+### Prompt 2 — define the dataset contract
+
+```text
+Work only in database/. Design a documented CSV schema for water-footprint records. Include item name, normalized item key, unit, total litres per kg, green water, blue water, grey water, source, and notes. Update database/README.md with the schema and explicit rules for source URLs, licences, and unit conversions. Do not invent water-footprint values and do not add downloaded data.
+```
+
+### Prompt 3 — implement deterministic cleaning
+
+```text
+Work only in database/scripts/clean_dataset.py and related database documentation. Implement a deterministic cleaning pipeline that reads raw_water_footprint.csv, standardizes item names and units, validates numeric values, and writes cleaned_water_footprint.csv. Invalid rows should be reported clearly rather than silently discarded. Explain the conversion assumptions in comments and documentation. Do not modify backend/.
+```
+
+### Prompt 4 — add schemas and lookups
+
+```text
+Work only in database/. Implement clear schema definitions for WaterFootprint, ComparisonReference, and AltSuggestions in models/schemas.py. Implement lookup helpers in lookup.py that return the data needed by the documented GET /footprint response, including comparison and sustainability tip. Keep the interface simple for Aryaveer's backend. Add example data only when clearly marked as sample/demo data.
+```
+
+### Prompt 5 — seed and coverage checks
+
+```text
+Work only in database/scripts/. Implement a seed script that can be rerun safely and an audit_coverage.py script that accepts a list of ML labels and reports which labels are missing from the cleaned dataset. Do not import Kuhu's model or change ml_model/. Document exact commands and expected output in database/README.md.
+```
+
+### Prompt 6 — review before commit
+
+```text
+Review uncommitted changes on feature/database. Confirm raw data is preserved, cleaned data is reproducible, units are documented, no licence or privacy problem is visible, and changes stay inside database/. Report findings and propose a single focused commit message. Do not commit or push.
+```
+
 Use focused commits: one for source documentation, one for schema changes, and one for a data-cleaning algorithm if possible.
 
 ## Create your pull request

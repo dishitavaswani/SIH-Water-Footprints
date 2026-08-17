@@ -94,6 +94,46 @@ git commit -m "feat: add confidence-aware food predictor"
 git push origin feature/ml-recognition
 ```
 
+## Copy-ready Antigravity prompts
+
+Open the project in Antigravity, verify that the active branch is `feature/ml-recognition`, and use each prompt separately. Keep all source changes in `ml_model/`; never commit large model binaries or private images.
+
+### Prompt 1 — inspect ML baseline
+
+```text
+You are working in SIH-Water-Footprints on branch feature/ml-recognition. Inspect only ml_model/, database/lookup interface documentation, and the root README.md. Do not edit files. Summarize the expected prediction interface, confidence behavior, expected label-to-database relationship, model-file constraints, and a safe implementation plan.
+```
+
+### Prompt 2 — define the model contract
+
+```text
+Work only in ml_model/README.md and ml_model/predict.py. Define a stable `predict_label(image_path)` interface that returns a label, confidence, and a machine-readable low-confidence/manual-search signal. Set the confidence threshold to 0.6. Document input requirements, errors, model source/version/licence/checksum fields, and label naming rules. Do not download or commit a model binary.
+```
+
+### Prompt 3 — implement prediction adapter
+
+```text
+Work only in ml_model/predict.py. Implement a clean adapter around a future TFLite food-classification model: validate the image path, load the runtime lazily, preprocess an image according to configurable model metadata, map output index to a label, and return the documented confidence-aware result. The code must fail with a clear setup message when the local model file is absent. Do not modify backend/ or database/.
+```
+
+### Prompt 4 — create evaluation harness
+
+```text
+Work only in ml_model/accuracy_test.py and ml_model/README.md. Implement an evaluation harness that reads labelled sample images, calls predict_label, reports total predictions, correct predictions, accuracy, low-confidence count, unknown-label count, and failures. It must continue evaluating after a single bad image and print a concise final summary. Document how to add legal sample images.
+```
+
+### Prompt 5 — database/backend handoff
+
+```text
+Do not edit database/ or backend/. Add a concise section to ml_model/README.md that tells Dishita and Aryaveer exactly what the prediction function returns, how low-confidence results must be handled, and how to maintain a label-to-database-item mapping. Include a few example result objects but no fabricated accuracy claims.
+```
+
+### Prompt 6 — review before commit
+
+```text
+Review uncommitted changes on feature/ml-recognition. Confirm changes stay in ml_model/, no model binary/private image/secret is staged, the confidence threshold is exactly 0.6, missing-model errors are understandable, and evaluation is reproducible. Report problems and propose a focused commit message. Do not commit or push.
+```
+
 ## Create your pull request
 
 1. Create a PR from `feature/ml-recognition` to `dev`.

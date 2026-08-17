@@ -144,3 +144,43 @@ git pull origin feature/backend-api
 git merge origin/dev
 git push origin feature/backend-api
 ```
+
+## Copy-ready Antigravity prompts
+
+Open the project folder in Antigravity, confirm that the active branch is `feature/backend-api`, and use these prompts **one at a time**. Review every change before accepting it.
+
+### Prompt 1 — inspect the backend baseline
+
+```text
+You are working in the SIH-Water-Footprints repository on branch feature/backend-api. Inspect only the backend/ folder and the root README.md. Do not edit any files yet. Summarize the current FastAPI structure, missing dependencies, API contract, and the exact files that must change to add a basic health endpoint. Do not touch files outside backend/.
+```
+
+### Prompt 2 — create the app skeleton
+
+```text
+Work only in backend/. Implement a minimal FastAPI application in backend/app/main.py that can start with `uvicorn app.main:app --reload`. Add a GET /health endpoint returning JSON with a healthy status. Register API routes cleanly without changing the documented GET /footprint or POST /scan contract. Update backend/requirements.txt only if a dependency is necessary. Add concise code comments where decisions are not obvious. Then explain how to run and test the endpoint locally.
+```
+
+### Prompt 3 — add the footprint endpoint
+
+```text
+Work only in backend/. Implement GET /footprint with a required `item` query parameter. Keep the JSON response aligned with the root README API contract: item, total_litres_per_kg, green_water_litres, blue_water_litres, grey_water_litres, comparison, and tip. For now, isolate database access behind a helper so Dishita's database lookup can replace it later. Return a clear 404 response for an unknown item and 422 for invalid input. Do not edit database/ or mobile_app/. Add a small test or a manual verification instruction.
+```
+
+### Prompt 4 — prepare scan integration
+
+```text
+Work only in backend/. Implement POST /scan to accept an image upload safely. Define a clear adapter boundary for Kuhu's `predict_label(image_path)` function, but do not edit ml_model/. If confidence is below 0.6, return a response that asks the client to use manual search instead of claiming a food label. Validate file type and handle malformed uploads with useful errors. Document the expected response shape and how Shaurya can call the endpoint.
+```
+
+### Prompt 5 — configuration and CORS
+
+```text
+Work only in backend/. Add environment-based configuration and CORS settings in backend/app/core/config.py. Allow local Flutter development while keeping origins configurable by environment variable. Do not commit credentials, API keys, or a real production URL. Wire the configuration into the FastAPI app and update backend/README.md with setup variables and run commands.
+```
+
+### Prompt 6 — review before commit
+
+```text
+Review the current uncommitted changes on feature/backend-api. Check that changes are limited to backend/, no secrets or generated folders are included, the API contract has not accidentally changed, and the server can start. Report issues first. If the changes are safe, propose one concise Conventional Commit message but do not run git commit or git push.
+```

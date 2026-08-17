@@ -110,6 +110,46 @@ git commit -m "feat: add footprint results screen"
 git push origin feature/mobile-ui
 ```
 
+## Copy-ready Antigravity prompts
+
+Open the repository in Antigravity, confirm the branch is `feature/mobile-ui`, and run the prompts one at a time. Keep all changes inside `mobile_app/` unless the team approves a shared contract edit.
+
+### Prompt 1 — inspect the Flutter baseline
+
+```text
+You are working in SIH-Water-Footprints on branch feature/mobile-ui. Inspect only mobile_app/ and the root README.md. Do not edit files. Report the current Flutter project state, missing setup, required screens, API response fields, and a small implementation plan for Search, Scan, and Result screens.
+```
+
+### Prompt 2 — bootstrap the app
+
+```text
+Work only in mobile_app/. Create a minimal runnable Flutter app with Material theme, named routes or clear navigation, and a temporary home screen that links to search and scan flows. Update pubspec.yaml only for necessary packages. Do not add generated platform folders unless Flutter itself creates them. Give exact flutter commands to run, analyze, and test the app.
+```
+
+### Prompt 3 — add the API model and client
+
+```text
+Work only in mobile_app/lib/models and mobile_app/lib/services. Implement a FootprintResult model matching the documented backend JSON response exactly. Implement a configurable FootprintApiService for GET /footprint?item=<product> and a placeholder-safe POST /scan image upload method. Handle timeout, invalid JSON, 404, and server errors. Do not hard-code a personal IP address or change backend files.
+```
+
+### Prompt 4 — build search and result UI
+
+```text
+Work only in mobile_app/lib/screens and mobile_app/lib/widgets. Build a SearchScreen with text input, search action, loading state, empty state, API error state, and navigation to ResultScreen. Build ResultScreen to show item name, total litres per kg, green/blue/grey water breakdown, comparison, and tip. Keep visible strings easy to move to localization later. Ensure the layout works on a small phone screen.
+```
+
+### Prompt 5 — build the scan flow
+
+```text
+Work only in mobile_app/. Add a ScanScreen that lets the user choose or capture an image, shows upload progress, calls the scan service, and displays a low-confidence/manual-search fallback when confidence is below 0.6. Handle camera permission denial and no-network errors gracefully. Do not edit Kuhu's model files or Aryaveer's backend.
+```
+
+### Prompt 6 — quality review
+
+```text
+Review current changes on feature/mobile-ui. Run or specify `flutter analyze` and `flutter test`. Check for API-model mismatches, hard-coded secrets or URLs, overflow risks, missing loading/error states, and edits outside mobile_app/. Report issues and propose a focused commit message. Do not commit or push.
+```
+
 Do not commit `build/`, local Android signing keys, or environment secrets.
 
 ## Create your pull request

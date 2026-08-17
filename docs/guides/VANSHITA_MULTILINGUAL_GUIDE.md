@@ -84,6 +84,46 @@ git commit -m "feat: add Hindi result screen translations"
 git push origin feature/multilingual
 ```
 
+## Copy-ready Antigravity prompts
+
+Open the repository in Antigravity and verify the active branch is `feature/multilingual`. Use these prompts one at a time; do not accept machine-translated Hindi without review.
+
+### Prompt 1 — inspect localization scope
+
+```text
+You are working in SIH-Water-Footprints on branch feature/multilingual. Inspect only multilingual/, mobile_app/ visible-string usage, and the root README.md. Do not edit files. List all user-facing strings currently needed for search, scanning, results, errors, and buttons. Propose a consistent ARB key naming convention and identify integration assumptions for Flutter.
+```
+
+### Prompt 2 — create ARB foundations
+
+```text
+Work only in multilingual/l10n/. Create or expand app_en.arb and app_hi.arb with matching keys for the initial user journey: search, scan, loading, not found, network error, low confidence, water-footprint headings, comparison, and tips. Preserve identical placeholder names in both files. Use clear English and carefully reviewed Hindi. Do not edit mobile_app/.
+```
+
+### Prompt 3 — enforce key parity
+
+```text
+Work only in multilingual/scripts/qa_check_arb.py. Implement a Python checker that reads app_en.arb and app_hi.arb, reports keys missing from either file, checks placeholder parity, exits non-zero on a mismatch, and prints a short success summary when both files match. Add a README example showing how to run it.
+```
+
+### Prompt 4 — manage verified Hindi overrides
+
+```text
+Work only in multilingual/data and multilingual/scripts. Define a safe JSON format for verified Hindi overrides and implement generate_hi_overrides.py to validate the format and generate/update output predictably. Keep human-reviewed text separate from unreviewed machine suggestions. Never include a translation-provider API key in committed files.
+```
+
+### Prompt 5 — prepare Flutter handoff
+
+```text
+Do not edit mobile_app/. Review the current ARB keys and produce a concise integration note for Shaurya: file paths, key names, placeholders, expected generated localization approach, and the command needed to run the parity check. Add this note to multilingual/README.md.
+```
+
+### Prompt 6 — review before commit
+
+```text
+Review uncommitted changes on feature/multilingual. Verify English/Hindi key and placeholder parity, valid JSON/ARB syntax, no API secrets, clear reviewed versus machine-generated text, and changes limited to multilingual/. Report issues and propose a focused commit message. Do not commit or push.
+```
+
 ## Create your pull request
 
 1. Create a GitHub pull request from `feature/multilingual` into `dev`.
