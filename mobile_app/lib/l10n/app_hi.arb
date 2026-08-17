@@ -1,0 +1,51 @@
+{
+  "@@locale": "hi",
+
+  "appTitle": "जल पदचिह्न",
+  "searchHeading": "किसी भी खाद्य पदार्थ का\nजल मूल्य जानें",
+  "searchSubtitle": "खाद्य पदार्थ दर्ज करें और हरे, नीले और ग्रे जल पदचिह्न देखें।",
+  "searchHint": "जैसे: चावल, गेहूँ, आम…",
+  "searchLabel": "खाद्य पदार्थ",
+  "searchButton": "खोजें",
+  "popularItems": "लोकप्रिय वस्तुएँ",
+  "scanTabLabel": "स्कैन",
+  "searchTabLabel": "खोज",
+  "scanHeading": "खाद्य पदार्थ स्कैन करें",
+  "scanInstruction": "किसी खाद्य पदार्थ की फोटो लें और तुरंत उसका जल पदचिह्न जानें।",
+  "scanButtonCamera": "फ़ोटो लें",
+  "scanButtonGallery": "गैलरी से चुनें",
+  "scanConfirm": "जल पदचिह्न देखें",
+  "scanAgain": "फिर से स्कैन करें",
+  "detected": "पहचाना गया",
+  "confidence": "विश्वास स्तर",
+  "calculating": "पदचिह्न गणना हो रही है…",
+  "waterBreakdown": "जल विभाजन",
+  "allValuesIn": "सभी मान {unit} में",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "हरा जल",
+  "greenWaterSub": "वर्षा-आधारित (कृषि)",
+  "blueWater": "नीला जल",
+  "blueWaterSub": "सतह और भूजल",
+  "greyWater": "ग्रे जल",
+  "greyWaterSub": "प्रदूषण तनुकरण",
+  "totalLabel": "कुल",
+  "perspective": "परिप्रेक्ष्य में देखें",
+  "ecoTip": "पर्यावरण सुझाव",
+  "searchAgain": "अन्य वस्तु खोजें",
+  "backToSearch": "खोज पर वापस जाएं",
+  "noDataFound": "\"{item}\" के लिए डेटा नहीं मिला।",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "कुछ गलत हो गया। पुनः प्रयास करें।",
+  "errorOffline": "आप ऑफ़लाइन हैं। अपना कनेक्शन जाँचें।",
+  "retry": "पुनः प्रयास",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

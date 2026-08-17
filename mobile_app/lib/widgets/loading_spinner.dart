@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 
-/// WaterLoadingSpinner — animated loading indicator used during API calls.
+/// Animated loading spinner shown during API calls.
 ///
-/// Shows a pulsing water-drop icon with a circular progress indicator.
+/// Used in SearchScreen and ScanScreen via [LoadState.loading].
 class WaterLoadingSpinner extends StatelessWidget {
   const WaterLoadingSpinner({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 40,
-            width: 40,
+            height: 44,
+            width: 44,
             child: CircularProgressIndicator(
               color: Color(0xFF0077B6),
-              strokeWidth: 3,
+              strokeWidth: 3.5,
             ),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 14),
           Text(
-            'Calculating footprint…',
+            'Calculating…',
             style: TextStyle(color: Colors.grey, fontSize: 13),
           ),
         ],

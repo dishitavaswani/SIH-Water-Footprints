@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// FootprintVisualBar — coloured progress bar for one water footprint tier.
-///
-/// Used in [ResultScreen] to display green / blue / grey breakdown visually.
+/// Color-coded water footprint bar for one tier (Green / Blue / Grey).
 class FootprintVisualBar extends StatelessWidget {
   final String label;
   final String sublabel;
@@ -21,7 +19,8 @@ class FootprintVisualBar extends StatelessWidget {
     required this.icon,
   });
 
-  double get _fraction => total == 0 ? 0 : (value / total).clamp(0.0, 1.0);
+  double get _fraction =>
+      total == 0 ? 0 : (value / total).clamp(0.0, 1.0);
 
   @override
   Widget build(BuildContext context) {
@@ -56,22 +55,30 @@ class FootprintVisualBar extends StatelessWidget {
                     ),
                     Text(
                       sublabel,
-                      style: const TextStyle(color: Colors.grey, fontSize: 11),
+                      style: const TextStyle(
+                          color: Colors.grey, fontSize: 11),
                     ),
                   ],
                 ),
               ),
-              Text(
-                '${value.toStringAsFixed(0)} L/kg',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '$pct%',
-                style: TextStyle(color: color, fontWeight: FontWeight.bold),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '${value.toStringAsFixed(0)} L/kg',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    '$pct%',
+                    style: TextStyle(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12),
+                  ),
+                ],
               ),
             ],
           ),

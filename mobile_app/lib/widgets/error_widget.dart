@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// FootprintErrorWidget — displays offline, 404, or generic error states.
+/// Error widget for offline, 404, and generic API errors.
 ///
-/// Shows an appropriate icon and message. The caller can optionally provide
-/// an [onRetry] callback to show a Retry button.
+/// Auto-selects icon based on error message content.
+/// Shows optional [onRetry] button.
 class FootprintErrorWidget extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
@@ -14,37 +14,38 @@ class FootprintErrorWidget extends StatelessWidget {
     this.onRetry,
   });
 
-  /// Detects whether the error is likely a connectivity problem.
   bool get _isOffline =>
       message.toLowerCase().contains('socket') ||
       message.toLowerCase().contains('connection') ||
       message.toLowerCase().contains('network') ||
-      message.toLowerCase().contains('timeout');
+      message.toLowerCase().contains('timeout') ||
+      message.toLowerCase().contains('offline');
 
-  /// Detects whether the error is a 404 / not-found.
   bool get _isNotFound =>
       message.toLowerCase().contains('not found') ||
-      message.toLowerCase().contains('no data');
+      message.toLowerCase().contains('no data') ||
+      message.toLowerCase().contains('नहीं मिला'); // Hindi 404
 
   @override
   Widget build(BuildContext context) {
+    const errorColor = Color(0xFFD62246);
+
     final IconData icon = _isOffline
         ? Icons.wifi_off_rounded
         : _isNotFound
             ? Icons.search_off_rounded
             : Icons.error_outline_rounded;
 
-    const Color errorColor = Color(0xFFD62246);
-
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: errorColor.withOpacity(0.08),
+        color: errorColor.withOpacity(0.07),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: errorColor.withOpacity(0.3)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,7 +55,7 @@ class FootprintErrorWidget extends StatelessWidget {
               Expanded(
                 child: Text(
                   message,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: errorColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -64,14 +65,18 @@ class FootprintErrorWidget extends StatelessWidget {
             ],
           ),
           if (onRetry != null) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh, size: 16),
                 label: const Text('Retry'),
-                style: TextButton.styleFrom(foregroundColor: errorColor),
+                style: TextButton.styleFrom(
+                  foregroundColor: errorColor,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 4),
+                ),
               ),
             ),
           ],
