@@ -6,9 +6,6 @@ import sqlite3
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     from models.schemas import Base, WaterFootprint, ComparisonReference, AltSuggestions, HAS_SQLALCHEMY
-    if HAS_SQLALCHEMY:
-        from sqlalchemy import create_engine
-        from sqlalchemy.orm import sessionmaker
 except ImportError:
     HAS_SQLALCHEMY = False
 
@@ -17,7 +14,8 @@ def seed_db(db_path: str = None, csv_path: str = None):
     Idempotent seeding script:
     - Creates tables if they do not exist
     - Re-seeds water_footprint records from cleaned_water_footprint.csv
-    - Re-seeds comparison references and alternative suggestions
+    - Re-seeds benchmark comparison references (bathtub, bucket, standard water bottle)
+    - Re-seeds actionable alternative suggestions for high footprint items
     - Safe to run multiple times without duplicating entries
     """
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,10 +26,10 @@ def seed_db(db_path: str = None, csv_path: str = None):
 
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
 
-    # Reference objects for comparison
+    # Approved benchmark reference objects
     ref_objects = [
         ("glass of water", 0.25),
-        ("water bottle", 1.0),
+        ("standard water bottle", 1.0),
         ("toilet flush", 6.0),
         ("bucket", 15.0),
         ("shower", 65.0),
@@ -39,51 +37,60 @@ def seed_db(db_path: str = None, csv_path: str = None):
         ("swimming pool", 25000.0)
     ]
 
-    # Suggestions for high footprint items
+    # Alternative suggestions for high-footprint agricultural items
     suggestions = [
         (
-            "rice",
-            "millet / oats",
-            "Millets require significantly less irrigation water to cultivate than rice."
+            "beef",
+            "chicken / lentils / beans",
+            "Beef production has an extremely high water footprint compared to plant proteins and poultry."
         ),
         (
-            "beef",
-            "lentils / beans",
-            "Beef production has an extremely high water footprint compared to plant proteins."
+            "rice",
+            "millets / oats",
+            "Millets and oats require significantly less irrigation water to cultivate than flooded rice paddies."
         ),
         (
             "chicken",
-            "lentils / dal",
-            "Plant-based proteins have a dramatically lower water footprint."
+            "lentils / dal / tofu",
+            "Plant-based proteins have a dramatically lower water footprint than poultry."
         ),
         (
             "coffee",
             "herbal tea / green tea",
-            "Herbal teas require a fraction of the water needed for processing coffee beans."
+            "Herbal teas require a fraction of the water needed for growing and processing coffee beans."
         ),
         (
             "chocolate",
             "seasonal local fruits",
-            "Cocoa cultivation is water-intensive compared to local fruits."
+            "Cocoa cultivation and processing is water-intensive compared to local fresh fruits."
         ),
         (
             "almonds",
             "sunflower seeds / pumpkin seeds",
-            "Almonds require high irrigation water compared to seed alternatives."
+            "Almonds require intensive year-round irrigation compared to seed alternatives."
         ),
         (
             "cheese",
             "tofu / plant-based cheese",
-            "Dairy cheese requires large amounts of water for livestock feed."
+            "Dairy cheese requires large amounts of water for dairy cattle and feed production."
+        ),
+        (
+            "pork",
+            "lentils / tofu / chicken",
+            "Pork has a higher water footprint than plant-based proteins or poultry."
+        ),
+        (
+            "butter",
+            "olive oil / plant-based spreads",
+            "Plant-based oils require less lifecycle water than dairy butter."
         )
     ]
 
-    # Native SQLite implementation ensuring 100% reliability with standard library
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     try:
-        # Create Tables
+        # 1. Create Tables
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS water_footprint (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -112,13 +119,14 @@ def seed_db(db_path: str = None, csv_path: str = None):
                 reason TEXT NOT NULL
             );
         """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS ix_alt_suggestions_high_footprint_item ON alt_suggestions (high_footprint_item);")
 
         # Clear existing records for idempotent seeding
         cursor.execute("DELETE FROM water_footprint;")
         cursor.execute("DELETE FROM comparison_reference;")
         cursor.execute("DELETE FROM alt_suggestions;")
 
-        # 1. Seed WaterFootprint from CSV
+        # 2. Seed WaterFootprint from CSV
         items_count = 0
         if os.path.exists(csv_path):
             with open(csv_path, mode='r', encoding='utf-8') as f:
@@ -136,14 +144,14 @@ def seed_db(db_path: str = None, csv_path: str = None):
                     ))
                     items_count += 1
 
-        # 2. Seed ComparisonReference
+        # 3. Seed ComparisonReference
         for obj_name, litres in ref_objects:
             cursor.execute("""
                 INSERT INTO comparison_reference (object_name, litres)
                 VALUES (?, ?);
             """, (obj_name, litres))
 
-        # 3. Seed AltSuggestions
+        # 4. Seed AltSuggestions
         for high_item, alt, reason in suggestions:
             cursor.execute("""
                 INSERT INTO alt_suggestions (high_footprint_item, suggested_alt, reason)
@@ -157,7 +165,7 @@ def seed_db(db_path: str = None, csv_path: str = None):
         print("=" * 60)
         print(f" Database file         : {db_path}")
         print(f" Seeded WaterFootprint : {items_count} items")
-        print(f" Seeded Comparisons    : {len(ref_objects)} reference objects")
+        print(f" Seeded Comparisons    : {len(ref_objects)} benchmark objects")
         print(f" Seeded Alternatives   : {len(suggestions)} suggestions")
         print("=" * 60)
 

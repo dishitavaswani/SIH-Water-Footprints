@@ -1,5 +1,5 @@
 try:
-    from sqlalchemy import Column, Integer, String, Float
+    from sqlalchemy import Column, Integer, String, Float, Text
     from sqlalchemy.ext.declarative import declarative_base
 
     Base = declarative_base()
@@ -20,7 +20,7 @@ try:
 
     class ComparisonReference(Base):
         """
-        Reference household objects for relatable water volume comparisons.
+        Benchmark household objects for relatable water volume comparisons.
         Table: comparison_reference
         """
         __tablename__ = 'comparison_reference'
@@ -37,9 +37,9 @@ try:
         __tablename__ = 'alt_suggestions'
 
         id = Column(Integer, primary_key=True, autoincrement=True)
-        high_footprint_item = Column(String, unique=True, nullable=False)
+        high_footprint_item = Column(String, unique=True, nullable=False, index=True)
         suggested_alt = Column(String, nullable=False)
-        reason = Column(String, nullable=False)
+        reason = Column(Text, nullable=False)
 
     HAS_SQLALCHEMY = True
 
