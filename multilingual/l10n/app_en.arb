@@ -1,1 +1,51 @@
-{}
+{
+  "@@locale": "en",
+  "appTitle": "Water Footprint Tracker",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "search": "Search food items",
+  "@search": {
+    "description": "Label for search food items"
+  },
+  "searchHint": "Type a food name (e.g., rice, apple)...",
+  "@searchHint": {
+    "description": "Placeholder hint in search bar"
+  },
+  "scan": "Scan Food",
+  "@scan": {
+    "description": "Label for scan food button"
+  },
+  "waterFootprint": "Water Footprint",
+  "@waterFootprint": {
+    "description": "Header title for water footprint result"
+  },
+  "greenWater": "Green Water (Rainwater)",
+  "@greenWater": {
+    "description": "Label for green water metric"
+  },
+  "blueWater": "Blue Water (Surface/Groundwater)",
+  "@blueWater": {
+    "description": "Label for blue water metric"
+  },
+  "greyWater": "Grey Water (Pollution dilution)",
+  "@greyWater": {
+    "description": "Label for grey water metric"
+  },
+  "tryAnother": "Try Another Item",
+  "@tryAnother": {
+    "description": "Button label to test another food item"
+  },
+  "litresPerKg": "litres/kg",
+  "@litresPerKg": {
+    "description": "Unit label for litres per kilogram"
+  },
+  "comparisonTitle": "Real-world Equivalent",
+  "@comparisonTitle": {
+    "description": "Title for comparison section"
+  },
+  "tipTitle": "Sustainability Tip",
+  "@tipTitle": {
+    "description": "Title for sustainability recommendation tip"
+  }
+}
