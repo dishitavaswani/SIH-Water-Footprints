@@ -1,0 +1,1 @@
+"""Water Footprint API package."""

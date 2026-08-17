@@ -1,0 +1,6 @@
+name: sih_water_footprint
+description: Water Footprint App
+publish_to: "none"
+version: 0.1.0+1
+environment:
+  sdk: ">=3.0.0 <4.0.0"

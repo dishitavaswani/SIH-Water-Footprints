@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Flutter / Dart
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+
+# ML artifacts and datasets
+*.tflite
+*.h5
+*.onnx
+database/data/*.sqlite
+
+# OS and IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

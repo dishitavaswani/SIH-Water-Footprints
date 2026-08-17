@@ -1,0 +1,1 @@
+// Water-footprint results screen.
