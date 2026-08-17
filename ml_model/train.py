@@ -245,34 +245,63 @@ def build_and_train():
         verbose=1,
     )
 
+    # 7. Phase 1: Fit Head with Frozen Base
     print("\n" + "=" * 50)
-    print(f"STARTING 17-CLASS TRAINING (Max {MAX_EPOCHS} epochs, patience {EARLY_STOPPING_PATIENCE})")
+    print("PHASE 1: TRAINING CLASSIFICATION HEAD (Base Frozen, LR: 1e-3)")
     print("=" * 50)
-
-    # 7. Fit Model with Class Weights
-    history = model.fit(
+    history_p1 = model.fit(
         train_ds_ready,
         validation_data=val_ds_ready,
-        epochs=MAX_EPOCHS,
+        epochs=6,
         callbacks=[early_stopping],
         class_weight=class_weights,
         verbose=1,
     )
 
-    # 8. Print Final Metrics Summary
+    # 8. Phase 2: Fine-Tune Top 30 Convolutional Layers at Lower Learning Rate
     print("\n" + "=" * 50)
-    print("TRAINING SUMMARY")
+    print("PHASE 2: FINE-TUNING TOP CONVOLUTIONAL LAYERS (LR: 1e-4)")
+    print("=" * 50)
+    base_model.trainable = True
+    for layer in base_model.layers[:-30]:
+        layer.trainable = False
+
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
+        loss="categorical_crossentropy",
+        metrics=["accuracy"],
+    )
+
+    fine_tune_early_stopping = callbacks.EarlyStopping(
+        monitor="val_loss",
+        patience=EARLY_STOPPING_PATIENCE,
+        restore_best_weights=True,
+        verbose=1,
+    )
+
+    history_p2 = model.fit(
+        train_ds_ready,
+        validation_data=val_ds_ready,
+        epochs=8,
+        callbacks=[fine_tune_early_stopping],
+        class_weight=class_weights,
+        verbose=1,
+    )
+
+    # 9. Print Combined Metrics Summary
+    print("\n" + "=" * 50)
+    print("TRAINING SUMMARY (FINE-TUNING PHASE)")
     print("=" * 50)
     for epoch, (loss, acc, val_loss, val_acc) in enumerate(
         zip(
-            history.history.get("loss", []),
-            history.history.get("accuracy", []),
-            history.history.get("val_loss", []),
-            history.history.get("val_accuracy", []),
+            history_p2.history.get("loss", []),
+            history_p2.history.get("accuracy", []),
+            history_p2.history.get("val_loss", []),
+            history_p2.history.get("val_accuracy", []),
         ),
         start=1,
     ):
-        print(f"Epoch {epoch:2d}/{len(history.history['loss'])} - loss: {loss:.4f} - accuracy: {acc:.4f} - val_loss: {val_loss:.4f} - val_accuracy: {val_acc:.4f}")
+        print(f"Epoch {epoch:2d}/{len(history_p2.history['loss'])} - loss: {loss:.4f} - accuracy: {acc:.4f} - val_loss: {val_loss:.4f} - val_accuracy: {val_acc:.4f}")
 
     # 9. Save Trained Keras Model (model_17class.keras and active model.keras)
     print(f"\nSaving trained model to: {output_keras_path}")
