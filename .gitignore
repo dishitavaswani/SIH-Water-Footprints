@@ -13,9 +13,14 @@ venv/
 build/
 
 # ML artifacts and datasets
-*.tflite
+ml_model/training_data/
+*.keras
 *.h5
 *.onnx
+*.tflite
+!ml_model/models/model.tflite
+!ml_model/models/model_11class_baseline.tflite
+!ml_model/models/model_17class.tflite
 database/data/*.sqlite
 
 # OS and IDE
