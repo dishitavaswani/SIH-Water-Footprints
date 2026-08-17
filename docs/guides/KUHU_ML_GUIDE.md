@@ -134,6 +134,58 @@ Do not edit database/ or backend/. Add a concise section to ml_model/README.md t
 Review uncommitted changes on feature/ml-recognition. Confirm changes stay in ml_model/, no model binary/private image/secret is staged, the confidence threshold is exactly 0.6, missing-model errors are understandable, and evaluation is reproducible. Report problems and propose a focused commit message. Do not commit or push.
 ```
 
+## Roadmap-specific Antigravity prompts (Phases 1–5)
+
+### Phase 1 — standalone food classifier
+
+```text
+On branch feature/ml-recognition, implement Phase 1 only. Create a standalone Python script that loads a pre-trained TensorFlow Lite food image-classification model such as MobileNetV2/Food-101, accepts an image path, and prints the top predicted label with confidence. Load the model once at module level or through a cached lazy loader, never once per prediction. Document the model's source, licence, download method, label file, expected image size, and checksum. Do not commit the model binary.
+```
+
+### Phase 2 — importable backend interface and accuracy harness
+
+```text
+On branch feature/ml-recognition, implement Phase 2 only. Refactor the standalone classifier into `predict_label(image_path: str) -> dict` returning exactly `{'label': str, 'confidence': float}` for a valid confident prediction. Build a test harness that runs sample images, prints a results table, and measures accuracy on chosen demo foods. Keep model loading cached and document the API for Aryaveer. Do not modify backend/.
+```
+
+### Phase 3 — low-confidence behavior and coverage coordination
+
+```text
+On branch feature/ml-recognition, implement Phase 3 only. When confidence is below 0.6, return a special result with label None and message `Could not confidently identify this item`, rather than a weak guess. Test this path. Produce a list of reliably recognized demo labels for Dishita to compare against the database and clearly distinguish model labels from display names.
+```
+
+### Phase 4 — demo robustness
+
+```text
+On branch feature/ml-recognition, conduct Phase 4 demo hardening. Choose three food items that the actual camera/model combination recognizes reliably, test them in realistic lighting, record exact confidence results, and document a backup screen-recording procedure if live recognition fails. Do not fabricate accuracy metrics or add private images to Git.
+```
+
+### Phase 5 — presentation handoff
+
+```text
+Do not change prediction behavior. Add a concise presentation handoff in ml_model/README.md: why image recognition helps the product, the safe low-confidence fallback, the three verified demo items, and future scope such as regional scarcity weighting, blockchain traceability, and more languages. Label future scope clearly as future work.
+```
+
+## Git prompts for Kuhu
+
+### Start and sync safely
+
+```text
+Run `git status --short --branch`; if the working tree is not clean, stop and report it. Otherwise run `git checkout feature/ml-recognition`, `git pull origin feature/ml-recognition`, `git fetch origin`, and `git merge origin/dev`. If a conflict affects the prediction interface or label mapping, list it and ask Aryaveer/Dishita before resolving.
+```
+
+### Review, commit, and push a completed phase
+
+```text
+On feature/ml-recognition, run the ML test harness and `git diff --check`. Inspect staged files and confirm no `.tflite`, model binary, private image, credentials, or unrelated folder is staged. Propose `ml: <specific completed work>`; after approval, commit and push only to feature/ml-recognition.
+```
+
+### Create a phase pull request
+
+```text
+Prepare a pull request from feature/ml-recognition into dev titled `ml: Phase <NUMBER> — <specific work>`. Include model source/licence/version, test-harness results, confidence threshold behavior, known label/database gaps, integration interface for Aryaveer, and demo limitations. Do not merge it yourself.
+```
+
 ## Create your pull request
 
 1. Create a PR from `feature/ml-recognition` to `dev`.

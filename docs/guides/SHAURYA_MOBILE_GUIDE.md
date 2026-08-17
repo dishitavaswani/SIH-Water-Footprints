@@ -150,6 +150,58 @@ Work only in mobile_app/. Add a ScanScreen that lets the user choose or capture 
 Review current changes on feature/mobile-ui. Run or specify `flutter analyze` and `flutter test`. Check for API-model mismatches, hard-coded secrets or URLs, overflow risks, missing loading/error states, and edits outside mobile_app/. Report issues and propose a focused commit message. Do not commit or push.
 ```
 
+## Roadmap-specific Antigravity prompts (Phases 1–5)
+
+### Phase 1 — Flutter search foundation
+
+```text
+On branch feature/mobile-ui, implement Phase 1 only. Build a Flutter scaffold with Navigator, SearchScreen, ResultScreen, and FootprintResult. SearchScreen needs a TextField and Search button. ResultScreen displays item name plus green_wf, blue_wf, grey_wf, unit, comparison, and tip passed as data. Implement FootprintApiService.getFootprint(String item) with the http package and initially support a clearly isolated mock response until Aryaveer's backend is ready. Do not edit backend/.
+```
+
+### Phase 2 — camera, scan, and visual breakdown
+
+```text
+On branch feature/mobile-ui, implement Phase 2 only. Add ScanScreen using image_picker to capture/select an image. Upload it as multipart/form-data to POST <base_url>/scan, parse the response into FootprintResult, then navigate to ResultScreen. Display green/blue/grey values as three accessible colored horizontal bars and show comparison/tip below. Handle camera permissions, image selection cancellation, upload failure, and low-confidence manual-search fallback.
+```
+
+### Phase 3 — full localization integration
+
+```text
+On branch feature/mobile-ui, implement Phase 3 only. Replace hard-coded user-facing strings in SearchScreen, ScanScreen, ResultScreen, loading states, and errors with AppLocalizations keys from Vanshita's ARB resources. Wire the shared language toggle into the application state and ensure API calls pass `lang=en` or `lang=hi`. List any required missing ARB keys; do not edit multilingual/ directly.
+```
+
+### Phase 4 — polish and resilience
+
+```text
+On branch feature/mobile-ui, implement Phase 4 only. Add friendly loading spinners and error widgets for no internet, timeout, item-not-found (404), invalid scan, and low confidence. Use a simple loading/success/error state model. Improve spacing, readability, and app icon setup without adding secrets or generated build files. Test the UI on a small screen.
+```
+
+### Phase 5 — demo preparation
+
+```text
+Do not add unrelated features. Prepare a repeatable live-demo checklist in mobile_app/README.md: text search → result → scan → result → language toggle. Include fallback behavior if the API or image recognition is unavailable. Confirm the order Shaurya should follow during the team presentation.
+```
+
+## Git prompts for Shaurya
+
+### Start and sync safely
+
+```text
+In SIH-Water-Footprints, run `git status --short --branch`. If uncommitted changes exist, stop and report them. Otherwise run `git checkout feature/mobile-ui`, `git pull origin feature/mobile-ui`, `git fetch origin`, and `git merge origin/dev`. If Flutter files conflict, list each file and explain whether the conflict affects an API contract, localization, or UI before changing it.
+```
+
+### Review, commit, and push a completed phase
+
+```text
+On feature/mobile-ui, run `flutter analyze`, `flutter test`, `git diff --check`, and inspect the staged files. Confirm only mobile_app/ files are staged and no build output, signing key, personal base URL, or secret is included. Propose `mobile: <specific completed work>`; after approval, commit and push only to feature/mobile-ui.
+```
+
+### Create a phase pull request
+
+```text
+Prepare a pull request from feature/mobile-ui into dev titled `mobile: Phase <NUMBER> — <specific work>`. Include screenshots/recording if UI changed, exact Flutter test results, tested backend URL configuration, API dependency notes, localization dependency notes, and known limitations. Do not merge it yourself.
+```
+
 Do not commit `build/`, local Android signing keys, or environment secrets.
 
 ## Create your pull request

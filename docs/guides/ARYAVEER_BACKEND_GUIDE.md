@@ -184,3 +184,55 @@ Work only in backend/. Add environment-based configuration and CORS settings in 
 ```text
 Review the current uncommitted changes on feature/backend-api. Check that changes are limited to backend/, no secrets or generated folders are included, the API contract has not accidentally changed, and the server can start. Report issues first. If the changes are safe, propose one concise Conventional Commit message but do not run git commit or git push.
 ```
+
+## Roadmap-specific Antigravity prompts (Phases 1–5)
+
+### Phase 1 — FastAPI foundation and database-backed lookup
+
+```text
+On branch feature/backend-api, implement Phase 1 only. Create a FastAPI /footprint GET endpoint accepting `item` and optional `lang` (default `en`). It must query Dishita's SQLAlchemy WaterFootprint model using a case-insensitive partial match on item_name. The data fields are item_name, green_wf, blue_wf, grey_wf, and unit. Return item, green_wf, blue_wf, grey_wf, unit, comparison, and tip as JSON; return an informative 404 if nothing matches. Keep database access behind an adapter so it is easy to connect after Dishita merges. Do not implement /scan yet, do not use fake production data, and do not edit database/.
+```
+
+### Phase 2 — scan endpoint and full pipeline adapter
+
+```text
+On branch feature/backend-api, implement Phase 2 only. Add POST /scan accepting a multipart image upload plus optional `lang`. Save the upload only in a secure temporary location, call Kuhu's `predict_label(image_path)` interface, then use the existing footprint lookup path to build the full result. When no exact data match exists, try an explicit partial/fuzzy match and identify the result clearly. If ML confidence is below 0.6, return a graceful manual-search fallback. Clean up temporary files even on failure. Do not alter Kuhu's or Dishita's code.
+```
+
+### Phase 3 — language behavior
+
+```text
+On branch feature/backend-api, implement Phase 3 server-side language support. Add `lang` handling to both /footprint and /scan. English is the default. For translation-required comparison/tip text, first check a verified JSON override dictionary supplied by Vanshita; if unavailable, call a translation adapter and cache translations in memory by (text, lang). Keep API keys only in environment variables. Do not translate product identifiers blindly and do not modify multilingual/ source files.
+```
+
+### Phase 4 — deployable backend
+
+```text
+On branch feature/backend-api, prepare Phase 4 production readiness. Verify requirements.txt and Procfile/Render start command, implement environment-driven configuration for database URL and translation credentials, add structured request logging, and add a global exception handler returning clean JSON errors. Document deployment and restart verification steps in backend/README.md. Do not place live credentials in code or Git.
+```
+
+### Phase 5 — architecture handoff
+
+```text
+Do not edit application code. Inspect the integrated backend design and create a concise architecture handoff in backend/README.md for Aryaveer's presentation slide: mobile app → FastAPI → database lookup / ML prediction → translated response. State interfaces, failure paths, and deployment location without claiming features that are not implemented.
+```
+
+## Git prompts for Aryaveer
+
+### Start and sync safely
+
+```text
+Use the terminal in SIH-Water-Footprints. Verify the current branch and working tree with `git status --short --branch`. If there are uncommitted changes, stop and report them. Otherwise run `git checkout feature/backend-api`, `git pull origin feature/backend-api`, `git fetch origin`, and `git merge origin/dev`. If a conflict occurs, do not choose a side automatically; list each conflicted file and explain the conflict before editing it.
+```
+
+### Review, commit, and push a completed phase
+
+```text
+On feature/backend-api, inspect `git status` and `git diff --check`. Stage only backend/ files that belong to the completed Phase <NUMBER> task. Show the exact staged file list and proposed commit message `backend: <specific completed work>`. After I approve, run `git commit -m "backend: <specific completed work>"` and `git push origin feature/backend-api`. Never push to dev or main.
+```
+
+### Create a phase pull request
+
+```text
+Confirm feature/backend-api is pushed and clean. Prepare a pull request from feature/backend-api into dev titled `backend: Phase <NUMBER> — <specific work>`. Draft a description with completed behavior, local test commands/results, API-contract impact, dependencies on Dishita/Kuhu/Vanshita, and known limitations. Do not merge the pull request yourself.
+```

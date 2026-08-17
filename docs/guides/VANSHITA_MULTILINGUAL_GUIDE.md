@@ -124,6 +124,58 @@ Do not edit mobile_app/. Review the current ARB keys and produce a concise integ
 Review uncommitted changes on feature/multilingual. Verify English/Hindi key and placeholder parity, valid JSON/ARB syntax, no API secrets, clear reviewed versus machine-generated text, and changes limited to multilingual/. Report issues and propose a focused commit message. Do not commit or push.
 ```
 
+## Roadmap-specific Antigravity prompts (Phases 1–5)
+
+### Phase 1 — Flutter i18n and translation experiment
+
+```text
+On branch feature/multilingual, implement Phase 1 only. Set up Flutter localization structure using flutter_localizations and intl. Create app_en.arb and app_hi.arb with matching initial keys: search, scan, waterFootprint, greenWater, blueWater, greyWater, and tryAnother. Write a standalone Python `translate(text: str, target_lang: str) -> str` experiment for Google Translate or Bhashini using environment variables only. Do not edit mobile_app/ integration code yet.
+```
+
+### Phase 2 — language toggle support and verified demo text
+
+```text
+On branch feature/multilingual, implement Phase 2 artifacts only. Define the expected Flutter language-toggle behavior for en/hi and document how API methods should append the `lang` parameter. Create a script that processes selected English comparison/tip strings through the translation adapter and writes a separate JSON override file for human verification. Add verified Hindi strings for demo-critical comparisons/tips. Do not claim machine translation is verified.
+```
+
+### Phase 3 — Hindi QA across the app
+
+```text
+On branch feature/multilingual, implement Phase 3 QA. Expand qa_check_arb.py so it reports keys missing in either ARB file and placeholder mismatches. Review the whole planned Search → Scan → Result flow in Hindi, identify awkward, missing, or truncated strings, and correct reviewed translations. Provide Shaurya with a concise list of changed keys and UI checks.
+```
+
+### Phase 4 — final readability pass
+
+```text
+On branch feature/multilingual, conduct the Phase 4 first-time-user readability pass. Review every Hindi string for respectful tone, clarity, consistent terminology for water footprint and manual retry, and sensible length for mobile screens. Record any remaining compromises or untranslated dynamic text in multilingual/README.md. Do not add API credentials.
+```
+
+### Phase 5 — accessibility-demo handoff
+
+```text
+Do not add new features. Create a short presentation handoff in multilingual/README.md showing how to demonstrate Hindi mode, which strings prove pan-India accessibility, and what fallback behavior is expected when a dynamic translation is not pre-verified.
+```
+
+## Git prompts for Vanshita
+
+### Start and sync safely
+
+```text
+Run `git status --short --branch`; if anything is uncommitted, stop and report it. Otherwise run `git checkout feature/multilingual`, `git pull origin feature/multilingual`, `git fetch origin`, and `git merge origin/dev`. If an ARB or JSON conflict occurs, list the conflicting keys and do not silently drop a translation.
+```
+
+### Review, commit, and push a completed phase
+
+```text
+On feature/multilingual, run the ARB parity check and `git diff --check`. Confirm only multilingual/ files are staged, no translation API credentials exist, and English/Hindi placeholders match. Propose `multilingual: <specific completed work>`; after approval, commit and push only to feature/multilingual.
+```
+
+### Create a phase pull request
+
+```text
+Prepare a pull request from feature/multilingual into dev titled `multilingual: Phase <NUMBER> — <specific work>`. Include parity-check output, verified versus machine-generated translation notes, changed key list, Shaurya integration notes, and unresolved strings. Do not merge it yourself.
+```
+
 ## Create your pull request
 
 1. Create a GitHub pull request from `feature/multilingual` into `dev`.

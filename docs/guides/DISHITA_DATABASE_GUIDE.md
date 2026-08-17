@@ -132,6 +132,58 @@ Work only in database/scripts/. Implement a seed script that can be rerun safely
 Review uncommitted changes on feature/database. Confirm raw data is preserved, cleaned data is reproducible, units are documented, no licence or privacy problem is visible, and changes stay inside database/. Report findings and propose a single focused commit message. Do not commit or push.
 ```
 
+## Roadmap-specific Antigravity prompts (Phases 1–5)
+
+### Phase 1 — clean data, schema, and seed script
+
+```text
+On branch feature/database, implement Phase 1 only. Write a cleaner for a raw water-footprint CSV with inconsistent column names/units. Normalize item names to lowercase, convert values to litres/kg, remove duplicates deterministically, and export a cleaned CSV with item_name, green_wf, blue_wf, grey_wf, and unit. Then implement SQLAlchemy schema and a seed script for `water_footprint` using exactly those columns. Preserve raw data and document conversion rules and data provenance. Do not edit backend/.
+```
+
+### Phase 2 — comparisons, alternatives, and lookup helpers
+
+```text
+On branch feature/database, implement Phase 2 only. Add SQLAlchemy tables `comparison_reference` (object_name, litres) and `alt_suggestions` (high_footprint_item, suggested_alt, reason). Seed approved demo values only, including intuitive reference objects such as bathtub, bucket, and water_bottle where validated. Implement get_comparison(litres) that chooses an understandable whole-number comparison and get_tip(item_name) that returns a suitable alternative. Provide a stable documented interface for Aryaveer's backend.
+```
+
+### Phase 3 — close model/data coverage gaps
+
+```text
+On branch feature/database, implement Phase 3 only. Write a script that compares Kuhu's supported ML output labels with water_footprint.item_name values and prints every missing mapping. Add accurately sourced entries for the exact demo foods that Kuhu's model recognizes reliably. Recheck that green_wf + blue_wf + grey_wf is sensible relative to the total representation and all units remain litres/kg. Do not fabricate missing data.
+```
+
+### Phase 4 — final data verification
+
+```text
+On branch feature/database, perform Phase 4 data QA. Randomly choose 10 records, trace each to its documented source, check units and conversions, check duplicate handling, and report corrections. Add a repeatable validation script or a data-quality report in database/README.md. Do not change values without recording the reason and source.
+```
+
+### Phase 5 — methodology handoff
+
+```text
+Do not change application code. Prepare a concise presentation handoff in database/README.md explaining data sources, green/blue/grey water methodology, cleaning rules, unit normalization, and limitations. Make claims only where supported by documented sources.
+```
+
+## Git prompts for Dishita
+
+### Start and sync safely
+
+```text
+Use the repository terminal. Run `git status --short --branch`; if there are uncommitted changes, stop and report them. Otherwise run `git checkout feature/database`, `git pull origin feature/database`, `git fetch origin`, and `git merge origin/dev`. If a conflict is reported, list affected files and do not resolve data/schema conflicts without asking the relevant owner.
+```
+
+### Review, commit, and push a completed phase
+
+```text
+On feature/database, inspect `git status`, `git diff --check`, and the staged file list. Confirm raw source files are not accidentally overwritten and no unrelated folder is staged. Propose `database: <specific completed work>` as the commit message. Only after I approve, commit and run `git push origin feature/database`. Never push to dev or main.
+```
+
+### Create a phase pull request
+
+```text
+Prepare, but do not merge, a pull request from feature/database to dev titled `database: Phase <NUMBER> — <specific work>`. Include source/licence information, unit conversion behavior, schema changes, seed/validation commands, impact on backend lookup, and known data gaps.
+```
+
 Use focused commits: one for source documentation, one for schema changes, and one for a data-cleaning algorithm if possible.
 
 ## Create your pull request
