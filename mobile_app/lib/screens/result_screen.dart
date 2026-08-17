@@ -1,32 +1,61 @@
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/footprint_result.dart';
 import '../widgets/footprint_visual_bar.dart';
 
-/// ResultScreen — Phase 1 + 2 + 3 + 4
+/// ResultScreen — Phase 1 + 2 + 3 + 4 + Improvements 6 & 7
 ///
-/// Displays the full water footprint breakdown for a food item.
-/// Receives a [FootprintResult] via Navigator arguments.
-/// Fully localised (EN/HI).
+/// • Improvement #6: Water footprint severity badge (Low/Medium/High/Very High)
+/// • Improvement #7: Share button — copies formatted summary via share_plus
 class ResultScreen extends StatelessWidget {
   final FootprintResult result;
 
   const ResultScreen({super.key, required this.result});
 
+  // ── Improvement #6: severity classification ───────────────────────────────
+  _Severity _getSeverity(double total) {
+    if (total < 500)  return _Severity('Low',       const Color(0xFF2DC653), Icons.water_drop_outlined);
+    if (total < 1500) return _Severity('Medium',    const Color(0xFFFFB800), Icons.water_outlined);
+    if (total < 3000) return _Severity('High',      const Color(0xFFFF6B35), Icons.waves);
+    return              _Severity('Very High',       const Color(0xFFD62246), Icons.warning_amber_rounded);
+  }
+
+  // ── Improvement #7: share ─────────────────────────────────────────────────
+  void _share(AppLocalizations l10n) {
+    final total = result.totalWf;
+    final severity = _getSeverity(total);
+    final text = '💧 Water Footprint: ${_cap(result.item)}\n'
+        '${severity.icon == Icons.water_drop_outlined ? '🟢' : severity.icon == Icons.water_outlined ? '🟡' : severity.icon == Icons.waves ? '🟠' : '🔴'} '
+        'Severity: ${severity.label}\n\n'
+        'Total: ${total.toStringAsFixed(0)} ${result.unit}\n'
+        '🟢 Green: ${result.greenWf.toStringAsFixed(0)} L/kg\n'
+        '🔵 Blue:  ${result.blueWf.toStringAsFixed(0)} L/kg\n'
+        '⚫ Grey:  ${result.greyWf.toStringAsFixed(0)} L/kg\n'
+        '${result.tip != null ? '\n💡 Tip: ${result.tip}' : ''}\n\n'
+        'Checked with Water Footprint App (SIH 2024)';
+
+    Share.share(text, subject: 'Water Footprint of ${_cap(result.item)}');
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final total = result.totalWf;
+    final severity = _getSeverity(total);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F8FB),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(
-          _capitalize(result.item),
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: Text(_cap(result.item), overflow: TextOverflow.ellipsis),
         actions: [
+          // Improvement #7 — share icon
+          IconButton(
+            icon: const Icon(Icons.share_outlined),
+            tooltip: 'Share',
+            onPressed: () => _share(l10n),
+          ),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: l10n.searchAgain,
@@ -36,33 +65,37 @@ class ResultScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Hero banner ──────────────────────────────────────────────
-              _HeroBanner(result: result, total: total, l10n: l10n),
+              _HeroBanner(
+                result: result,
+                total: total,
+                severity: severity,
+                l10n: l10n,
+              ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 22),
 
               // ── Breakdown heading ─────────────────────────────────────────
               Text(
                 l10n.waterBreakdown,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 17,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF003566),
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 3),
               Text(
                 l10n.allValuesIn(result.unit),
-                style: const TextStyle(color: Colors.grey, fontSize: 13),
+                style: const TextStyle(color: Colors.grey, fontSize: 12.5),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
 
-              // ── Visual bars ───────────────────────────────────────────────
+              // ── Animated visual bars — Improvement #1 ────────────────────
               FootprintVisualBar(
                 label: l10n.greenWater,
                 sublabel: l10n.greenWaterSub,
@@ -90,7 +123,7 @@ class ResultScreen extends StatelessWidget {
                 icon: Icons.cloud,
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 22),
 
               // ── Comparison card ───────────────────────────────────────────
               if (result.comparison != null) ...[
@@ -100,7 +133,7 @@ class ResultScreen extends StatelessWidget {
                   title: l10n.perspective,
                   body: result.comparison!,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
               ],
 
               // ── Eco tip card ──────────────────────────────────────────────
@@ -111,18 +144,31 @@ class ResultScreen extends StatelessWidget {
                   title: l10n.ecoTip,
                   body: result.tip!,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 22),
               ],
 
               // ── CTA ───────────────────────────────────────────────────────
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.search, size: 18),
-                  label: Text(l10n.searchAgain),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.search, size: 18),
+                      label: Text(l10n.searchAgain),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  OutlinedButton(
+                    onPressed: () => _share(l10n),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.all(14),
+                      minimumSize: Size.zero,
+                    ),
+                    child: const Icon(Icons.share_outlined, size: 20),
+                  ),
+                ],
               ),
+
               const SizedBox(height: 8),
             ],
           ),
@@ -131,8 +177,17 @@ class ResultScreen extends StatelessWidget {
     );
   }
 
-  String _capitalize(String s) =>
+  String _cap(String s) =>
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+}
+
+// ─── Severity data class ──────────────────────────────────────────────────────
+
+class _Severity {
+  final String label;
+  final Color color;
+  final IconData icon;
+  const _Severity(this.label, this.color, this.icon);
 }
 
 // ─── Hero banner ──────────────────────────────────────────────────────────────
@@ -140,11 +195,13 @@ class ResultScreen extends StatelessWidget {
 class _HeroBanner extends StatelessWidget {
   final FootprintResult result;
   final double total;
+  final _Severity severity;
   final AppLocalizations l10n;
 
   const _HeroBanner({
     required this.result,
     required this.total,
+    required this.severity,
     required this.l10n,
   });
 
@@ -171,18 +228,17 @@ class _HeroBanner extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Item name + water drop
+          // Item name
           Row(
             children: [
-              const Icon(Icons.water_drop,
-                  color: Colors.white70, size: 20),
+              const Icon(Icons.water_drop, color: Colors.white70, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  _capitalize(result.item),
+                  _cap(result.item),
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 26,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -191,31 +247,53 @@ class _HeroBanner extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // G / B / Gr mini badges
+          // Improvement #6: Severity badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            decoration: BoxDecoration(
+              color: severity.color.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: severity.color.withOpacity(0.6)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(severity.icon, size: 14, color: severity.color),
+                const SizedBox(width: 6),
+                Text(
+                  '${severity.label} water footprint',
+                  style: TextStyle(
+                    color: severity.color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // G / B / Gr mini stats
           Row(
             children: [
-              _MiniStat(
-                  label: 'Green', value: result.greenWf, color: const Color(0xFF52CE6D)),
-              const SizedBox(width: 10),
-              _MiniStat(
-                  label: 'Blue', value: result.blueWf, color: const Color(0xFF90E0EF)),
-              const SizedBox(width: 10),
-              _MiniStat(
-                  label: 'Grey', value: result.greyWf, color: const Color(0xFFBBBBBB)),
+              _MiniStat(label: 'Green', value: result.greenWf, color: const Color(0xFF52CE6D)),
+              const SizedBox(width: 8),
+              _MiniStat(label: 'Blue',  value: result.blueWf,  color: const Color(0xFF90E0EF)),
+              const SizedBox(width: 8),
+              _MiniStat(label: 'Grey',  value: result.greyWf,  color: const Color(0xFFBBBBBB)),
             ],
           ),
 
-          const Divider(color: Colors.white24, height: 24),
+          const Divider(color: Colors.white24, height: 22),
 
           // Total
           Row(
             children: [
-              Text(
-                '${l10n.totalLabel}: ',
-                style: const TextStyle(color: Colors.white70, fontSize: 14),
-              ),
+              Text('${l10n.totalLabel}: ',
+                  style: const TextStyle(color: Colors.white70, fontSize: 14)),
               Text(
                 '${total.toStringAsFixed(0)} ${result.unit}',
                 style: const TextStyle(
@@ -231,7 +309,7 @@ class _HeroBanner extends StatelessWidget {
     );
   }
 
-  String _capitalize(String s) =>
+  String _cap(String s) =>
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 }
 
@@ -240,11 +318,7 @@ class _MiniStat extends StatelessWidget {
   final double value;
   final Color color;
 
-  const _MiniStat({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+  const _MiniStat({required this.label, required this.value, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -258,15 +332,10 @@ class _MiniStat extends StatelessWidget {
         children: [
           Text(
             value.toStringAsFixed(0),
-            style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.bold,
-                fontSize: 15),
+            style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          Text(
-            label,
-            style: const TextStyle(color: Colors.white60, fontSize: 11),
-          ),
+          Text(label,
+              style: const TextStyle(color: Colors.white60, fontSize: 10)),
         ],
       ),
     );
@@ -290,12 +359,13 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.07),
+        color: color.withOpacity(isDark ? 0.12 : 0.07),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.22)),
+        border: Border.all(color: color.withOpacity(0.25)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,18 +376,10 @@ class _InfoCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                    fontSize: 14,
-                  ),
-                ),
+                Text(title,
+                    style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 14)),
                 const SizedBox(height: 4),
-                Text(body,
-                    style:
-                        const TextStyle(fontSize: 14, height: 1.45)),
+                Text(body, style: const TextStyle(fontSize: 14, height: 1.45)),
               ],
             ),
           ),

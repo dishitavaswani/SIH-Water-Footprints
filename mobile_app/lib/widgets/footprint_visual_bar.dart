@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Color-coded water footprint bar for one tier (Green / Blue / Grey).
+/// Color-coded water footprint bar with animated fill — Improvement #1.
+///
+/// On mount the bar animates from 0 → [value/total] over 900ms
+/// using an elastic ease curve for a satisfying reveal.
 class FootprintVisualBar extends StatelessWidget {
   final String label;
   final String sublabel;
@@ -25,13 +28,16 @@ class FootprintVisualBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pct = (_fraction * 100).toStringAsFixed(1);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.07),
+        color: isDark
+            ? color.withOpacity(0.12)
+            : color.withOpacity(0.07),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withOpacity(isDark ? 0.3 : 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,8 +61,7 @@ class FootprintVisualBar extends StatelessWidget {
                     ),
                     Text(
                       sublabel,
-                      style: const TextStyle(
-                          color: Colors.grey, fontSize: 11),
+                      style: const TextStyle(color: Colors.grey, fontSize: 11),
                     ),
                   ],
                 ),
@@ -74,9 +79,10 @@ class FootprintVisualBar extends StatelessWidget {
                   Text(
                     '$pct%',
                     style: TextStyle(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
@@ -85,15 +91,22 @@ class FootprintVisualBar extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          // ── Progress bar ──
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: LinearProgressIndicator(
-              value: _fraction,
-              minHeight: 10,
-              backgroundColor: color.withOpacity(0.15),
-              valueColor: AlwaysStoppedAnimation<Color>(color),
-            ),
+          // ── Animated progress bar — Improvement #1 ──
+          TweenAnimationBuilder<double>(
+            tween: Tween<double>(begin: 0.0, end: _fraction),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.easeOutCubic,
+            builder: (context, animValue, _) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: LinearProgressIndicator(
+                  value: animValue,
+                  minHeight: 10,
+                  backgroundColor: color.withOpacity(isDark ? 0.2 : 0.15),
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              );
+            },
           ),
         ],
       ),
