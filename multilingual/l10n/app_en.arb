@@ -47,5 +47,30 @@
   "tipTitle": "Sustainability Tip",
   "@tipTitle": {
     "description": "Title for sustainability recommendation tip"
+  },
+  "loading": "Calculating water footprint...",
+  "@loading": {
+    "description": "Loading state message"
+  },
+  "itemNotFound": "Item not found. Try searching another food.",
+  "@itemNotFound": {
+    "description": "Error message when queried item is not in database"
+  },
+  "lowConfidence": "Could not clearly recognize the item. Please search manually.",
+  "@lowConfidence": {
+    "description": "Message when image recognition confidence is below threshold"
+  },
+  "networkError": "Network error. Please check your connection.",
+  "@networkError": {
+    "description": "Error message when backend is unreachable or offline"
+  },
+  "allValuesIn": "All values in {unit}",
+  "@allValuesIn": {
+    "description": "Unit specification string",
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
   }
 }
