@@ -1,5 +1,10 @@
-# Database — Dishita
+# Database + Data Curation Pillar — Owned by Dishita
 
-Owns water-footprint datasets, SQLAlchemy schemas, data-cleaning and seed scripts, and lookup helpers.
+Branch Name: `feature/database`
 
-Keep raw source data unchanged. Generate cleaned data through `scripts/clean_dataset.py` and document its source and licence.
+## Responsibilities
+- Source, clean, and standardize dataset (`data/raw_water_footprint.csv` -> `data/cleaned_water_footprint.csv`)
+- SQLAlchemy DB schema (`models/schemas.py`): `WaterFootprint`, `ComparisonReference`, `AltSuggestions`
+- Database seeding script (`scripts/seed_db.py`)
+- Lookup functions (`lookup.py`): `get_comparison()`, `get_tip()`
+- Coverage auditing script (`scripts/audit_coverage.py`)
