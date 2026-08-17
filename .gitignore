@@ -1,25 +1,67 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-.venv/
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+/lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
 venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables
 .env
+.env.local
+.env.*.local
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
 
 # Flutter / Dart
 .dart_tool/
-.packages
 .flutter-plugins
 .flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
 build/
+ios/Pods/
+ios/.symlinks/
+ephemeral/
 
-# ML artifacts and datasets
-*.tflite
-*.h5
-*.onnx
-database/data/*.sqlite
-
-# OS and IDE
-.DS_Store
-Thumbs.db
-.idea/
+# IDE & Editor files
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Large ML Weights / Logs (if needed)
+*.log
