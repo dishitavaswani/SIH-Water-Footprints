@@ -1,47 +1,59 @@
 import os
 import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from models.schemas import WaterFootprint, ComparisonReference, AltSuggestions
+import sqlite3
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "water_footprint.db")
+DB_PATH = os.path.join(BASE_DIR, "data", "water_footprint.db")
+if not os.path.exists(DB_PATH):
+    legacy_path = os.path.join(BASE_DIR, "water_footprint.db")
+    if os.path.exists(legacy_path):
+        DB_PATH = legacy_path
 
-def get_db_session():
-    engine = create_engine(f"sqlite:///{DB_PATH}")
-    Session = sessionmaker(bind=engine)
-    return Session()
+def get_connection():
+    return sqlite3.connect(DB_PATH)
 
 def get_water_footprint(item_name: str):
     """
-    Queries WaterFootprint table with case-insensitive partial match on item_name.
+    Queries water_footprint table with case-insensitive partial match on item_name.
     """
-    if not item_name:
+    if not item_name or not os.path.exists(DB_PATH):
         return None
 
-    session = get_db_session()
     query_str = item_name.strip().lower()
-    
-    # Direct exact match first
-    result = session.query(WaterFootprint).filter(WaterFootprint.item_name == query_str).first()
-    
-    # Partial match fallback
-    if not result:
-        result = session.query(WaterFootprint).filter(WaterFootprint.item_name.like(f"%{query_str}%")).first()
-        
-    session.close()
-    
-    if result:
-        return {
-            "item_name": result.item_name,
-            "green_wf": result.green_wf,
-            "blue_wf": result.blue_wf,
-            "grey_wf": result.grey_wf,
-            "unit": result.unit
-        }
-    return None
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Exact match first
+        cursor.execute("""
+            SELECT item_name, green_wf, blue_wf, grey_wf, unit
+            FROM water_footprint
+            WHERE item_name = ?
+            LIMIT 1;
+        """, (query_str,))
+        row = cursor.fetchone()
+
+        # Partial match fallback
+        if not row:
+            cursor.execute("""
+                SELECT item_name, green_wf, blue_wf, grey_wf, unit
+                FROM water_footprint
+                WHERE item_name LIKE ?
+                LIMIT 1;
+            """, (f"%{query_str}%",))
+            row = cursor.fetchone()
+
+        if row:
+            return {
+                "item_name": row[0],
+                "green_wf": row[1],
+                "blue_wf": row[2],
+                "grey_wf": row[3],
+                "unit": row[4]
+            }
+        return None
+    finally:
+        conn.close()
 
 def get_comparison(litres: float) -> str:
     """
@@ -50,9 +62,18 @@ def get_comparison(litres: float) -> str:
     if litres <= 0:
         return "Negligible water usage"
 
-    session = get_db_session()
-    refs = session.query(ComparisonReference).all()
-    session.close()
+    if not os.path.exists(DB_PATH):
+        num_baths = round(litres / 150.0)
+        return f"Equivalent to roughly {num_baths if num_baths > 0 else 1} bathtubs of water"
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT object_name, litres FROM comparison_reference;")
+        refs = cursor.fetchall()
+    finally:
+        conn.close()
 
     if not refs:
         num_baths = round(litres / 150.0)
@@ -62,14 +83,14 @@ def get_comparison(litres: float) -> str:
     best_diff = float('inf')
     best_count = 1
 
-    for ref in refs:
-        count = round(litres / ref.litres)
+    for obj_name, ref_litres in refs:
+        count = round(litres / ref_litres)
         if count <= 0:
             count = 1
-        diff = abs(litres - (count * ref.litres))
+        diff = abs(litres - (count * ref_litres))
         if diff < best_diff:
             best_diff = diff
-            best_match = ref.object_name
+            best_match = obj_name
             best_count = count
 
     plural_map = {
@@ -85,21 +106,31 @@ def get_comparison(litres: float) -> str:
     object_label = plural_map.get(best_match, f"{best_match}s") if best_count > 1 else best_match
     return f"Equivalent to roughly {best_count} {object_label}"
 
-def get_tip(item_name: str) -> str | None:
+def get_tip(item_name: str) -> str:
     """
     Looks up a suggested lower-footprint alternative.
     """
-    if not item_name:
-        return None
+    if not item_name or not os.path.exists(DB_PATH):
+        return "Conserve water by choosing locally grown, seasonal produce."
 
-    session = get_db_session()
     query_str = item_name.strip().lower()
-    result = session.query(AltSuggestions).filter(AltSuggestions.high_footprint_item == query_str).first()
-    session.close()
+    conn = get_connection()
+    cursor = conn.cursor()
 
-    if result:
-        return f"Consider replacing with {result.suggested_alt} for lower water consumption ({result.reason})."
-    return "Conserve water by choosing locally grown, seasonal produce."
+    try:
+        cursor.execute("""
+            SELECT suggested_alt, reason
+            FROM alt_suggestions
+            WHERE high_footprint_item = ?
+            LIMIT 1;
+        """, (query_str,))
+        row = cursor.fetchone()
+
+        if row:
+            return f"Consider replacing with {row[0]} for lower water consumption ({row[1]})."
+        return "Conserve water by choosing locally grown, seasonal produce."
+    finally:
+        conn.close()
 
 if __name__ == '__main__':
     print("Testing DB Lookup Functions:")

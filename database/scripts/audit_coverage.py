@@ -1,7 +1,6 @@
 import os
 import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import sqlite3
 
 # Ensure UTF-8 output on Windows console
 if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
@@ -10,20 +9,23 @@ if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from models.schemas import WaterFootprint
-
 def audit_coverage():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    db_path = os.path.join(base_dir, "water_footprint.db")
+    db_path = os.path.join(base_dir, "data", "water_footprint.db")
+    if not os.path.exists(db_path):
+        legacy_path = os.path.join(base_dir, "water_footprint.db")
+        if os.path.exists(legacy_path):
+            db_path = legacy_path
 
     if not os.path.exists(db_path):
-        print("Error: Database not found. Run seed_db.py first.")
+        print(f"Error: Database not found at {db_path}. Run seed_db.py first.")
         return
 
-    engine = create_engine(f"sqlite:///{db_path}")
-    Session = sessionmaker(bind=engine)
-    session = Session()
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT item_name FROM water_footprint;")
+    db_items = {row[0].lower().strip() for row in cursor.fetchall()}
+    conn.close()
 
     # Known food items recognized by the ML model
     ml_recognized_labels = [
@@ -31,9 +33,6 @@ def audit_coverage():
         "coffee", "potato", "tomato", "banana", "chocolate",
         "beef", "pork", "eggs", "cheese", "bread", "orange", "tea"
     ]
-
-    db_items = {row.item_name for row in session.query(WaterFootprint.item_name).all()}
-    session.close()
 
     print("=" * 65)
     print(" Database Coverage Audit vs ML Recognized Food Labels")
