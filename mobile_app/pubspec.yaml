@@ -1,6 +1,22 @@
 name: sih_water_footprint
-description: Water Footprint App
+description: "Water Footprint App - SIH 2024"
 publish_to: "none"
 version: 0.1.0+1
+
 environment:
   sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  image_picker: ^1.1.2
+  provider: ^6.1.2
+  share_plus: ^10.1.4
+  shared_preferences: ^2.3.3
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.3
+
+flutter:
+  uses-material-design: true
