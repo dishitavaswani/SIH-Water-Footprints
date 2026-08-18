@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIH Water Footprint Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glow-bg glow-1"></div>
+    <div class="glow-bg glow-2"></div>
+    <div class="glow-bg glow-3"></div>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="url(#water-grad)"/>
+                        <defs>
+                            <linearGradient id="water-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#38bdf8"/>
+                                <stop offset="100%" stop-color="#0284c7"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title" id="brand-title">AquaFootprint</span>
+                    <span class="brand-subtitle">Smart India Hackathon</span>
+                </div>
+            </div>
+
+            <div class="nav-controls">
+                <div class="status-pill" id="backend-status">
+                    <span class="status-dot"></span>
+                    <span class="status-label" id="status-text">FastAPI Live</span>
+                </div>
+
+                <div class="lang-selector-container">
+                    <label for="lang-select" class="lang-icon" title="Choose Language">🌐</label>
+                    <select class="lang-dropdown" id="lang-select" aria-label="Choose Language">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="mr">मराठी</option>
+                        <option value="gu">ગુજરાતી</option>
+                        <option value="bn">বাংলা</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="kn">ಕನ್ನಡ</option>
+                        <option value="ml">മലയാളം</option>
+                        <option value="pa">ਪੰਜਾਬੀ</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="badge-pill" id="hero-badge">💧 Sustainable Water Intelligence</div>
+            <h1 class="hero-title" id="hero-heading">
+                Discover the Hidden <span class="gradient-text">Water Footprint</span> of Your Food
+            </h1>
+            <p class="hero-description" id="hero-desc">
+                Calculate total rainwater, groundwater, and pollution assimilation required to produce agricultural items. Search by name or scan using AI vision.
+            </p>
+        </section>
+
+        <!-- Search & Scan Tabs -->
+        <section class="interactive-card">
+            <div class="tab-header">
+                <button class="tab-btn active" id="tab-search-btn" onclick="switchTab('search')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span id="tab-search-label">Search Product</span>
+                </button>
+                <button class="tab-btn" id="tab-scan-btn" onclick="switchTab('scan')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    <span id="tab-scan-label">AI Camera Scan</span>
+                </button>
+            </div>
+
+            <!-- Search Mode -->
+            <div class="tab-content" id="tab-search">
+                <form id="search-form" onsubmit="handleSearch(event)">
+                    <div class="search-box">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="Type a food item (e.g., Rice, Coffee, Apple, Chicken, Chocolate)..." autocomplete="off">
+                        <button type="submit" class="primary-btn" id="search-submit-btn">
+                            <span id="search-btn-text">Analyze</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="popular-chips">
+                    <span class="chips-label" id="popular-label">Popular:</span>
+                    <div class="chips-list" id="chips-container">
+                        <button class="chip" onclick="searchItem('rice')">🌾 Rice</button>
+                        <button class="chip" onclick="searchItem('coffee')">☕ Coffee</button>
+                        <button class="chip" onclick="searchItem('apple')">🍎 Apple</button>
+                        <button class="chip" onclick="searchItem('chocolate')">🍫 Chocolate</button>
+                        <button class="chip" onclick="searchItem('beef')">🥩 Beef</button>
+                        <button class="chip" onclick="searchItem('banana')">🍌 Banana</button>
+                        <button class="chip" onclick="searchItem('milk')">🥛 Milk</button>
+                        <button class="chip" onclick="searchItem('wheat')">🍞 Wheat</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scan Mode -->
+            <div class="tab-content hidden" id="tab-scan">
+                <div class="dropzone" id="dropzone" onclick="triggerFileInput()">
+                    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileSelected(event)">
+                    <div class="dropzone-inner" id="dropzone-idle">
+                        <div class="scan-icon-bubble">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <h3 id="dropzone-title">Upload or Take a Photo</h3>
+                        <p id="dropzone-subtitle">Drag & drop product image or click to browse</p>
+                        <span class="badge-sub">Supports JPEG, PNG, WEBP</span>
+                    </div>
+                    <div class="dropzone-preview hidden" id="dropzone-preview">
+                        <img id="preview-img" src="" alt="Scan preview">
+                        <button class="secondary-btn" id="change-img-btn" onclick="event.stopPropagation(); triggerFileInput()">Choose Different Photo</button>
+                    </div>
+                </div>
+                <div class="scan-actions hidden" id="scan-actions">
+                    <button class="primary-btn full-width" id="start-scan-btn" onclick="executeScan()">
+                        <span id="scan-btn-text">Run AI Recognition Scan</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <div class="loading-state hidden" id="loading-state">
+            <div class="spinner"></div>
+            <p id="loading-text">Retrieving water footprint metrics...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-card hidden" id="error-card">
+            <div class="error-icon">⚠️</div>
+            <div class="error-body">
+                <h4 id="error-title">Item Not Found</h4>
+                <p id="error-message">Could not find water footprint data for this item.</p>
+            </div>
+        </div>
+
+        <!-- Result Card -->
+        <section class="result-section hidden" id="result-card">
+            <div class="result-header">
+                <div class="result-title-group">
+                    <span class="result-tag" id="result-category">Product Footprint</span>
+                    <h2 class="result-item-name" id="res-item-name">Rice</h2>
+                </div>
+                <div class="severity-badge severity-high" id="res-severity">
+                    <span class="severity-dot"></span>
+                    <span id="res-severity-text">High Impact</span>
+                </div>
+            </div>
+
+            <!-- Hero Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card hero-metric">
+                    <span class="metric-label" id="lbl-total-wf">Total Water Footprint</span>
+                    <div class="metric-value-row">
+                        <span class="metric-value" id="res-total-wf">2,500</span>
+                        <span class="metric-unit" id="res-unit">Litres / kg</span>
+                    </div>
+                    <div class="benchmark-pill" id="res-comparison">
+                        🛁 Equivalent to ~11 bathtubs of water
+                    </div>
+                </div>
+
+                <!-- Green, Blue, Grey Breakdown Cards -->
+                <div class="breakdown-grid">
+                    <div class="breakdown-card green-card">
+                        <div class="breakdown-header">
+                            <span class="color-badge green-dot"></span>
+                            <span class="breakdown-name" id="lbl-green">Green Water</span>
+                            <span class="breakdown-percent" id="res-green-pct">68%</span>
+                        </div>
+                        <div class="breakdown-val" id="res-green-val">1,700 L</div>
+                        <span class="breakdown-desc" id="desc-green">Rainwater consumed</span>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill green-fill" id="fill-green" style="width: 68%"></div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-card blue-card">
+                        <div class="breakdown-header">
+                            <span class="color-badge blue-dot"></span>
+                            <span class="breakdown-name" id="lbl-blue">Blue Water</span>
+                            <span class="breakdown-percent" id="res-blue-pct">24%</span>
+                        </div>
+                        <div class="breakdown-val" id="res-blue-val">600 L</div>
+                        <span class="breakdown-desc" id="desc-blue">Surface & groundwater irrigation</span>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill blue-fill" id="fill-blue" style="width: 24%"></div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-card grey-card">
+                        <div class="breakdown-header">
+                            <span class="color-badge grey-dot"></span>
+                            <span class="breakdown-name" id="lbl-grey">Grey Water</span>
+                            <span class="breakdown-percent" id="res-grey-pct">8%</span>
+                        </div>
+                        <div class="breakdown-val" id="res-grey-val">200 L</div>
+                        <span class="breakdown-desc" id="desc-grey">Freshwater to dilute pollution</span>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill grey-fill" id="fill-grey" style="width: 8%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sustainable Alternative Tip Card -->
+            <div class="tip-card" id="tip-container">
+                <div class="tip-icon">💡</div>
+                <div class="tip-content">
+                    <h4 id="lbl-tip-heading">Actionable Sustainability Tip</h4>
+                    <p id="res-tip">Consider replacing with millets / oats for lower water consumption.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Database Explorer Grid -->
+        <section class="explorer-section">
+            <div class="section-head">
+                <div>
+                    <h3 class="section-title" id="lbl-db-title">Database Catalog (41 Standardized Items)</h3>
+                    <p class="section-subtitle" id="lbl-db-subtitle">Click any item to inspect its complete water footprint profile</p>
+                </div>
+            </div>
+            <div class="catalog-grid" id="catalog-grid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>SIH Water Footprints • Smart India Hackathon 2024 Project</p>
+        <p class="footer-sub">Standardized using Water Footprint Network (WFN) & ISO 14046 methodologies</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

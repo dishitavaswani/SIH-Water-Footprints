@@ -1,0 +1,52 @@
+{
+  "@@locale": "ml",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "ജല കാൽപ്പാട്",
+  "searchHeading": "ഏതൊരു ഭക്ഷണ സാധനത്തിന്റെയും\nജലച്ചെലവ് കണ്ടെത്തുക",
+  "searchSubtitle": "പച്ച, നീല, ചാര ജല കാൽപ്പാടുകൾ കാണാൻ ഭക്ഷണ സാധനത്തിന്റെ പേര് നൽകുക.",
+  "searchHint": "ഉദാ. അരി, ഗോതമ്പ്, മാങ്ങ…",
+  "searchLabel": "ഭക്ഷണ സാധനം",
+  "searchButton": "തിരയുക",
+  "popularItems": "ജനപ്രിയ ഇനങ്ങൾ",
+  "scanTabLabel": "സ്കാൻ",
+  "searchTabLabel": "തിരയൽ",
+  "scanHeading": "ഭക്ഷണ സാധനം സ്കാൻ ചെയ്യുക",
+  "scanInstruction": "ഭക്ഷണം തിരിച്ചറിയാനും അതിന്റെ ജല കാൽപ്പാട് തത്സമയം അറിയാനും ക്യാമറ കാണിക്കുക.",
+  "scanButtonCamera": "ഫോട്ടോ എടുക്കുക",
+  "scanButtonGallery": "ഗാലറിയിൽ നിന്ന് തിരഞ്ഞെടുക്കുക",
+  "scanConfirm": "ജല കാൽപ്പാട് കണ്ടെത്തുക",
+  "scanAgain": "വീണ്ടും സ്കാൻ ചെയ്യുക",
+  "detected": "തിരിച്ചറിഞ്ഞു",
+  "confidence": "വിശ്വാസ്യത",
+  "calculating": "കണക്കാക്കുന്നു…",
+  "waterBreakdown": "ജല വിഭജനം",
+  "allValuesIn": "എല്ലാ മൂല്യങ്ങളും {unit} ൽ",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "പച്ച വെള്ളം",
+  "greenWaterSub": "മഴവെള്ളം (കൃഷി)",
+  "blueWater": "നീല ജലം",
+  "blueWaterSub": "ഭൂഗർഭജലവും ഉപരിതല ജലവും",
+  "greyWater": "ചാര ജലം",
+  "greyWaterSub": "മലിനീകരണ ലഘൂകരണം",
+  "totalLabel": "ആകെ",
+  "perspective": "താരതമ്യം ചെയ്തു കാണുക",
+  "ecoTip": "പരിസ്ഥിതി സൗഹൃദ നിർദ്ദേശം",
+  "searchAgain": "മറ്റൊരു ഇനം തിരയുക",
+  "backToSearch": "തിരയലിലേക്ക് മടങ്ങുക",
+  "noDataFound": "\"{item}\" ന് ഡാറ്റ കണ്ടെത്തിയില്ല.",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "എന്തോ തകരാറുണ്ടായി. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
+  "errorOffline": "നിങ്ങൾ ഓഫ്‌ലൈനിലാണ്. കണക്ഷൻ പരിശോധിക്കുക.",
+  "retry": "വീണ്ടും ശ്രമിക്കുക",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

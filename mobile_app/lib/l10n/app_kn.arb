@@ -1,0 +1,52 @@
+{
+  "@@locale": "kn",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "ನೀರಿನ ಹೆಜ್ಜೆಗುರುತು",
+  "searchHeading": "ಯಾವುದೇ ಆಹಾರ ಪದಾರ್ಥದ\nನೀರಿನ ವೆಚ್ಚವನ್ನು ತಿಳಿಯಿರಿ",
+  "searchSubtitle": "ಹಸಿರು, ನೀಲಿ ಮತ್ತು ಬೂದು ನೀರಿನ ಹೆಜ್ಜೆಗುರುತನ್ನು ನೋಡಲು ಆಹಾರ ಪದಾರ್ಥವನ್ನು ನಮೂದಿಸಿ.",
+  "searchHint": "ಉದಾ. ಅಕ್ಕಿ, ಗೋಧಿ, ಮಾವು…",
+  "searchLabel": "ಆಹಾರ ಪದಾರ್ಥ",
+  "searchButton": "ಹುಡುಕಿ",
+  "popularItems": "ಜನಪ್ರಿಯ ವಸ್ತುಗಳು",
+  "scanTabLabel": "ಸ್ಕ್ಯಾನ್",
+  "searchTabLabel": "ಹುಡುಕಾಟ",
+  "scanHeading": "ಆಹಾರ ಪದಾರ್ಥವನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ",
+  "scanInstruction": "ಆಹಾರ ಪದಾರ್ಥವನ್ನು ಗುರುತಿಸಲು ಮತ್ತು ಅದರ ನೀರಿನ ಹೆಜ್ಜೆಗುರುತನ್ನು ತಕ್ಷಣ ಪಡೆಯಲು ಕ್ಯಾಮೆರಾ ತೋರಿಸಿ.",
+  "scanButtonCamera": "ಫೋಟೋ ತೆಗೆಯಿರಿ",
+  "scanButtonGallery": "ಗ್ಯಾಲರಿಯಿಂದ ಆರಿಸಿ",
+  "scanConfirm": "ನೀರಿನ ಹೆಜ್ಜೆಗುರುತು ಪಡೆಯಿರಿ",
+  "scanAgain": "ಮತ್ತೆ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ",
+  "detected": "ಗುರುತಿಸಲಾಗಿದೆ",
+  "confidence": "ವಿಶ್ವಾಸಾರ್ಹತೆ",
+  "calculating": "ಲೆಕ್ಕಾಚಾರ ಮಾಡಲಾಗುತ್ತಿದೆ…",
+  "waterBreakdown": "ನೀರಿನ ವಿಭಜನೆ",
+  "allValuesIn": "ಎಲ್ಲಾ ಮೌಲ್ಯಗಳು {unit} ನಲ್ಲಿ",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "ಹಸಿರು ನೀರು",
+  "greenWaterSub": "ಮಳೆ ಆಧಾರಿತ (ಕೃಷಿ)",
+  "blueWater": "ನೀಲಿ ನೀರು",
+  "blueWaterSub": "ಅಂತರ್ಜಲ ಮತ್ತು ಮೇಲ್ಮೈ ನೀರು",
+  "greyWater": "ಬೂದು ನೀರು",
+  "greyWaterSub": "ಮಾಲಿನ್ಯ ದುರ್ಬಲಗೊಳಿಸುವಿಕೆ",
+  "totalLabel": "ಒಟ್ಟು",
+  "perspective": "ಹೋಲಿಕೆಯಲ್ಲಿ ನೋಡಿ",
+  "ecoTip": "ಪರಿಸರ ಸಲಹೆ",
+  "searchAgain": "ಮತ್ತೊಂದು ಐಟಂ ಹುಡುಕಿ",
+  "backToSearch": "ಹುಡುಕಾಟಕ್ಕೆ ಹಿಂತಿರುಗಿ",
+  "noDataFound": "\"{item}\" ಗಾಗಿ ಯಾವುದೇ ಡೇಟಾ ಕಂಡುಬಂದಿಲ್ಲ.",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "ಏನೋ ತಪ್ಪಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "errorOffline": "ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ. ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ.",
+  "retry": "ಮರುಪ್ರಯತ್ನಿಸಿ",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

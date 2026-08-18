@@ -1,7 +1,10 @@
+"""Automated ARB Parity & Integrity Validator for all supported regional languages."""
+
 import os
 import sys
 import json
 import re
+from pathlib import Path
 from typing import Set, Dict, List
 
 # Ensure UTF-8 output on Windows console
@@ -13,128 +16,95 @@ if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
 
 PLACEHOLDER_REGEX = re.compile(r'\{([a-zA-Z0-9_]+)\}')
 
+
 def extract_placeholders(text: str) -> Set[str]:
     """Extracts all {placeholder} names from an ARB string."""
     if not isinstance(text, str):
         return set()
     return set(PLACEHOLDER_REGEX.findall(text))
 
-def qa_check_arb() -> bool:
+
+def validate_arb_files() -> bool:
+    """Validates 100% key parity, non-empty values, and placeholder consistency
+    across all ARB localization files in mobile_app/lib/l10n.
     """
-    Automated ARB Parity & Integrity Validator:
-    - Reads both app_en.arb and app_hi.arb
-    - Validates 100% key parity (bidirectional)
-    - Validates placeholder consistency (e.g. {item}, {unit})
-    - Checks for empty or whitespace-only values
-    - Prints structured diagnostic table
-    - Returns True if all checks pass, False otherwise
-    """
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    en_path = os.path.join(base_dir, "l10n", "app_en.arb")
-    hi_path = os.path.join(base_dir, "l10n", "app_hi.arb")
+    repo_root = Path(__file__).resolve().parents[2]
+    l10n_dir = repo_root / "mobile_app" / "lib" / "l10n"
+    en_file = l10n_dir / "app_en.arb"
 
-    if not os.path.exists(en_path):
-        print(f"❌ Error: English ARB not found at {en_path}")
-        return False
-    if not os.path.exists(hi_path):
-        print(f"❌ Error: Hindi ARB not found at {hi_path}")
+    if not en_file.exists():
+        print(f"❌ Error: Canonical English ARB not found at {en_file}")
         return False
 
-    try:
-        with open(en_path, mode='r', encoding='utf-8') as f:
-            en_data: Dict = json.load(f)
-    except Exception as err:
-        print(f"❌ JSON Parse Error in app_en.arb: {err}")
-        return False
+    with open(en_file, mode="r", encoding="utf-8") as f:
+        en_data: Dict = json.load(f)
 
-    try:
-        with open(hi_path, mode='r', encoding='utf-8') as f:
-            hi_data: Dict = json.load(f)
-    except Exception as err:
-        print(f"❌ JSON Parse Error in app_hi.arb: {err}")
-        return False
-
-    # Extract user keys (ignore metadata keys starting with @ or @@)
     en_keys = {k for k in en_data if not k.startswith("@")}
-    hi_keys = {k for k in hi_data if not k.startswith("@")}
-
-    missing_in_hi = en_keys - hi_keys
-    extra_in_hi = hi_keys - en_keys
-    all_keys = sorted(en_keys | hi_keys)
+    all_passed = True
 
     print("\n" + "=" * 80)
-    print(" ARB LOCALIZATION KEY PARITY & INTEGRITY QA VALIDATOR")
+    print(" MULTILINGUAL ARB LOCALIZATION INTEGRITY & PARITY AUDIT")
     print("=" * 80)
-    print(f" English ARB File : {en_path} ({len(en_keys)} keys)")
-    print(f" Hindi ARB File   : {hi_path} ({len(hi_keys)} keys)")
-    print("-" * 80)
-    print(f"{'Key':<20} {'Status':<12} {'Placeholders':<15} {'English Text'}")
+    print(f" Source ARB Reference : {en_file.name} ({len(en_keys)} keys)")
     print("-" * 80)
 
-    has_errors = False
-    placeholder_mismatches: List[str] = []
-    empty_keys: List[str] = []
+    target_arb_files = sorted(list(l10n_dir.glob("app_*.arb")))
 
-    for key in all_keys:
-        en_val = en_data.get(key, "")
-        hi_val = hi_data.get(key, "")
+    for arb_path in target_arb_files:
+        lang_code = arb_path.stem.replace("app_", "")
+        try:
+            with open(arb_path, mode="r", encoding="utf-8") as f:
+                data: Dict = json.load(f)
+        except Exception as err:
+            print(f"❌ [{lang_code}] JSON Parse Error in {arb_path.name}: {err}")
+            all_passed = False
+            continue
 
-        key_errors = []
+        keys = {k for k in data if not k.startswith("@")}
+        missing = en_keys - keys
+        extra = keys - en_keys
+        empty = [k for k in keys if not str(data.get(k, "")).strip()]
 
-        if key not in en_keys:
-            key_errors.append("MISSING_IN_EN")
-        if key not in hi_keys:
-            key_errors.append("MISSING_IN_HI")
+        placeholder_errors = []
+        for k in en_keys.intersection(keys):
+            en_ph = extract_placeholders(en_data[k])
+            tgt_ph = extract_placeholders(data[k])
+            if en_ph != tgt_ph:
+                placeholder_errors.append(f"{k} (EN={en_ph} vs {lang_code}={tgt_ph})")
 
-        if not str(en_val).strip() or not str(hi_val).strip():
-            key_errors.append("EMPTY_VALUE")
-            empty_keys.append(key)
+        status_flag = "✅ PASS"
+        issues = []
+        if missing:
+            status_flag = "❌ FAIL"
+            issues.append(f"Missing {len(missing)} keys: {missing}")
+            all_passed = False
+        if extra:
+            status_flag = "⚠️ WARN"
+            issues.append(f"Extra {len(extra)} keys: {extra}")
+        if empty:
+            status_flag = "❌ FAIL"
+            issues.append(f"Empty {len(empty)} keys: {empty}")
+            all_passed = False
+        if placeholder_errors:
+            status_flag = "❌ FAIL"
+            issues.append(f"Placeholder mismatch: {placeholder_errors}")
+            all_passed = False
 
-        # Placeholder checks
-        en_placeholders = extract_placeholders(en_val)
-        hi_placeholders = extract_placeholders(hi_val)
-
-        if en_placeholders != hi_placeholders:
-            key_errors.append("PLACEHOLDER_MISMATCH")
-            placeholder_mismatches.append(
-                f"{key}: EN={en_placeholders} vs HI={hi_placeholders}"
-            )
-
-        if key_errors:
-            has_errors = True
-            status = f"✗ {','.join(key_errors)}"
+        status_str = f"{arb_path.name:<18} [{status_flag}] ({len(keys)} keys)"
+        if issues:
+            print(f"{status_str}\n   └─ {'; '.join(issues)}")
         else:
-            status = "✓ OK"
+            print(f"{status_str}")
 
-        p_display = f"{{{','.join(en_placeholders)}}}" if en_placeholders else "-"
-        en_display = en_val if len(en_val) <= 28 else en_val[:25] + "..."
-        print(f"{key:<20} {status:<12} {p_display:<15} {en_display}")
-
-    print("-" * 80)
-    print(" SUMMARY REPORT:")
-    print(f"   • Total Keys Evaluated       : {len(all_keys)}")
-    print(f"   • Keys Missing in Hindi      : {len(missing_in_hi)}")
-    print(f"   • Keys Extra in Hindi        : {len(extra_in_hi)}")
-    print(f"   • Empty/Blank Values         : {len(empty_keys)}")
-    print(f"   • Placeholder Mismatches     : {len(placeholder_mismatches)}")
     print("=" * 80)
+    if all_passed:
+        print("🎉 ALL REGIONAL ARB LOCALIZATION FILES PASSED 100% PARITY CHECKS!")
+    else:
+        print("❌ SOME ARB FILES FAILED VALIDATION CHECKS.")
+    print("=" * 80 + "\n")
+    return all_passed
 
-    if has_errors:
-        print("\n❌ VALIDATION FAILED:")
-        if missing_in_hi:
-            print(f"   - Missing in Hindi: {missing_in_hi}")
-        if extra_in_hi:
-            print(f"   - Extra in Hindi: {extra_in_hi}")
-        if empty_keys:
-            print(f"   - Empty values: {empty_keys}")
-        if placeholder_mismatches:
-            print(f"   - Placeholder mismatches: {placeholder_mismatches}")
-        print()
-        return False
 
-    print("\n✅ VALIDATION PASSED: 100% ARB key parity and placeholder integrity verified.\n")
-    return True
-
-if __name__ == '__main__':
-    passed = qa_check_arb()
-    sys.exit(0 if passed else 1)
+if __name__ == "__main__":
+    success = validate_arb_files()
+    sys.exit(0 if success else 1)

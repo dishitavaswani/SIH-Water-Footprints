@@ -1,0 +1,52 @@
+{
+  "@@locale": "te",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "నీటి పాదముద్ర",
+  "searchHeading": "ఏదైనా ఆహార పదార్థం యొక్క\nనీటి ఖర్చును కనుగొనండి",
+  "searchSubtitle": "ఆకుపచ్చ, నీలి మరియు బూడిద రంగు నీటి పాదముద్రను చూడటానికి ఆహార పదార్థాన్ని నమోదు చేయండి.",
+  "searchHint": "ఉదా. వరి, గోధుమ, మామిడి…",
+  "searchLabel": "ఆహార పదార్థం",
+  "searchButton": "శోధించండి",
+  "popularItems": "జనాదరణ పొందినవి",
+  "scanTabLabel": "స్కాన్",
+  "searchTabLabel": "శోధన",
+  "scanHeading": "ఆహార పదార్థాన్ని స్కాన్ చేయండి",
+  "scanInstruction": "ఆహార పదార్థాన్ని గుర్తించడానికి మరియు దాని నీటి పాదముద్రను వెంటనే పొందడానికి కెమెరాను చూపించండి.",
+  "scanButtonCamera": "ఫోటో తీయండి",
+  "scanButtonGallery": "గ్యాలరీ నుండి ఎంచుకోండి",
+  "scanConfirm": "నీటి పాదముద్ర పొందండి",
+  "scanAgain": "మళ్లీ స్కాన్ చేయండి",
+  "detected": "గుర్తించబడింది",
+  "confidence": "విశ్వసనీయత",
+  "calculating": "లెక్కిస్తోంది…",
+  "waterBreakdown": "నీటి విభజన",
+  "allValuesIn": "అన్ని విలువలు {unit} లో",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "ఆకుపచ్చ నీరు",
+  "greenWaterSub": "వర్షపు నీరు (వ్యవసాయం)",
+  "blueWater": "నీలి నీరు",
+  "blueWaterSub": "భూగర్భ మరియు ఉపరితల జలాలు",
+  "greyWater": "బూడిద రంగు నీరు",
+  "greyWaterSub": "కాలుష్య తగ్గింపు",
+  "totalLabel": "మొత్తం",
+  "perspective": "పోలికను చూడండి",
+  "ecoTip": "పర్యావరణ చిట్కా",
+  "searchAgain": "మరో వస్తువును శోధించండి",
+  "backToSearch": "శోధనకు తిరిగి వెళ్లండి",
+  "noDataFound": "\"{item}\" కొరకు డేటా కనుగొనబడలేదు.",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "ఏదో తప్పు జరిగింది. దయచేసి మళ్లీ ప్రయత్నించండి.",
+  "errorOffline": "మీరు ఆఫ్‌లైన్‌లో ఉన్నారు. ఇంటర్నెట్ తనిఖీ చేయండి.",
+  "retry": "మళ్ళీ ప్రయత్నించండి",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

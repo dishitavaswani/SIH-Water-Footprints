@@ -8,7 +8,7 @@ import 'scan_screen.dart';
 
 /// HomeScreen — hosts SearchScreen and ScanScreen as bottom-nav tabs.
 ///
-/// Owns the shared AppBar (with language toggle) and NavigationBar.
+/// Owns the shared AppBar (with multi-language regional selector) and NavigationBar.
 /// ResultScreen is pushed on top of this as a full route.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +26,92 @@ class _HomeScreenState extends State<HomeScreen> {
     ScanScreen(),
   ];
 
+  void _openLanguagePicker(BuildContext context, LocaleProvider provider) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.language, color: Color(0xFF0077B6)),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Select Language / भाषा चुनें',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(),
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: LocaleProvider.supportedLanguages.length,
+                    itemBuilder: (ctx, index) {
+                      final lang = LocaleProvider.supportedLanguages[index];
+                      final isSelected = lang.code == provider.locale.languageCode;
+
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: isSelected
+                              ? const Color(0xFF0077B6)
+                              : Colors.grey.shade200,
+                          foregroundColor: isSelected ? Colors.white : Colors.black87,
+                          child: Text(
+                            lang.code.toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        title: Text(
+                          lang.nativeName,
+                          style: TextStyle(
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: Text(
+                          lang.englishName +
+                              (lang.isVerified ? ' (Verified)' : ' (Community)'),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        trailing: isSelected
+                            ? const Icon(Icons.check_circle, color: Color(0xFF0077B6))
+                            : null,
+                        onTap: () {
+                          provider.setLanguageCode(lang.code);
+                          Navigator.pop(ctx);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -42,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          // Language toggle — switches EN ↔ HI
+          // Language selector — shows native script and opens 10-language picker
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: TextButton(
@@ -52,23 +138,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              onPressed: () => localeProvider.toggleLocale(),
+              onPressed: () => _openLanguagePicker(context, localeProvider),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.language, size: 15),
                   const SizedBox(width: 4),
                   Text(
-                    localeProvider.isHindi
-                        ? l10n.switchToEnglish
-                        : l10n.switchToHindi,
+                    localeProvider.currentLanguage.nativeName,
                     style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w600),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),

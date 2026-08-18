@@ -2,11 +2,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/footprint_result.dart';
 import '../models/load_state.dart';
+import '../providers/locale_provider.dart';
 import '../services/footprint_api_service.dart';
 import '../widgets/loading_spinner.dart';
 import '../widgets/error_widget.dart' as wf;
@@ -71,9 +73,11 @@ class _ScanScreenState extends State<ScanScreen> {
     });
 
     try {
+      final lang = context.read<LocaleProvider>().locale.languageCode;
       final FootprintResult result = await _api.scanImage(
         _imageBytes!,
         filename: _pickedFile?.name ?? 'capture.jpg',
+        lang: lang,
       );
       if (!mounted) return;
       await Navigator.pushNamed(context, '/result', arguments: result);

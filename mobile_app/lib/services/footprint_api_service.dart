@@ -26,12 +26,13 @@ class FootprintApiService {
   ///
   /// Throws [FootprintNotFoundException] on 404.
   /// Falls back to [_mockResult] when the server is unreachable.
-  Future<FootprintResult> getFootprint(String item) async {
+  Future<FootprintResult> getFootprint(String item, {String? lang}) async {
+    final effectiveLang = lang ?? this.lang;
     final uri = Uri.parse(baseUrl).replace(
       path: '/footprint',
       queryParameters: {
         'item': item.trim().toLowerCase(),
-        'lang': lang,
+        'lang': effectiveLang,
       },
     );
 
@@ -67,10 +68,12 @@ class FootprintApiService {
   Future<FootprintResult> scanImage(
     List<int> imageBytes, {
     String filename = 'capture.jpg',
+    String? lang,
   }) async {
+    final effectiveLang = lang ?? this.lang;
     final uri = Uri.parse(baseUrl).replace(
       path: '/scan',
-      queryParameters: {'lang': lang},
+      queryParameters: {'lang': effectiveLang},
     );
 
     try {
@@ -86,8 +89,14 @@ class FootprintApiService {
       final response = await http.Response.fromStream(streamed);
 
       if (response.statusCode == 200) {
-        return FootprintResult.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+        final Map<String, dynamic> data =
+            jsonDecode(response.body) as Map<String, dynamic>;
+        if (data['success'] == false) {
+          final msg = data['message'] as String? ??
+              'Could not confidently identify this item.';
+          throw FootprintApiException(msg);
+        }
+        return FootprintResult.fromJson(data);
       } else if (response.statusCode == 404) {
         throw FootprintNotFoundException('scanned item');
       } else {

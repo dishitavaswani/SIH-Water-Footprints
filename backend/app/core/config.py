@@ -55,13 +55,17 @@ class Settings:
         os.getenv("TRANSLATION_CACHE_TTL_SECONDS", "3600")
     )
     DEFAULT_LANGUAGE: str = os.getenv("DEFAULT_LANGUAGE", "en")
-    SUPPORTED_LANGUAGES: List[str] = [
-        lang.strip()
-        for lang in os.getenv("SUPPORTED_LANGUAGES", "en,hi").split(",")
-        if lang.strip()
-    ]
+    
+    @property
+    def SUPPORTED_LANGUAGES(self) -> List[str]:
+        try:
+            from multilingual.registry import get_supported_codes
+            return get_supported_codes()
+        except Exception:
+            return ["en", "hi", "mr", "gu", "bn", "ta", "te", "kn", "ml", "pa"]
+
     TRANSLATION_OVERRIDES_PATH: str = os.getenv(
-        "TRANSLATION_OVERRIDES_PATH", "../multilingual/data/overrides.json"
+        "TRANSLATION_OVERRIDES_PATH", "../multilingual/data/overrides"
     )
 
     # ── Logging ──────────────────────────────────────────────────────────

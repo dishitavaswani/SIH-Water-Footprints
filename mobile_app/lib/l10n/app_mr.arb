@@ -1,0 +1,52 @@
+{
+  "@@locale": "mr",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "पाण्याचा ठसा",
+  "searchHeading": "कोणत्याही अन्नपदार्थाचा\nपाण्याचा खर्च शोधा",
+  "searchSubtitle": "हिरवे, निळे आणि राखाडी पाण्याचा ठसा पाहण्यासाठी अन्नपदार्थ प्रविष्ट करा.",
+  "searchHint": "उदा. तांदूळ, गहू, आंबा…",
+  "searchLabel": "अन्नपदार्थ",
+  "searchButton": "शोधा",
+  "popularItems": "लोकप्रिय घटक",
+  "scanTabLabel": "स्कॅन",
+  "searchTabLabel": "शोध",
+  "scanHeading": "अन्नपदार्थ स्कॅन करा",
+  "scanInstruction": "अन्नपदार्थ ओळखण्यासाठी आणि त्याचा पाण्याचा ठसा त्वरित मिळवण्यासाठी कॅमेरा समोर धरा.",
+  "scanButtonCamera": "फोटो काढा",
+  "scanButtonGallery": "गॅलरीतून निवडा",
+  "scanConfirm": "पाण्याचा ठसा मिळवा",
+  "scanAgain": "पुन्हा स्कॅन करा",
+  "detected": "ओळखले गेले",
+  "confidence": "विश्वास पातळी",
+  "calculating": "पाण्याचा ठसा मोजत आहे…",
+  "waterBreakdown": "पाण्याचे विभाजन",
+  "allValuesIn": "सर्व मूल्ये {unit} मध्ये",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "हिरवे पाणी",
+  "greenWaterSub": "पावसाचे पाणी (शेती)",
+  "blueWater": "निळे पाणी",
+  "blueWaterSub": "भूजल आणि पृष्ठभागावरील पाणी",
+  "greyWater": "राखाडी पाणी",
+  "greyWaterSub": "प्रदूषण सौम्यीकरण",
+  "totalLabel": "एकूण",
+  "perspective": "तुलना करून पहा",
+  "ecoTip": "पर्यावरणपूरक सूचना",
+  "searchAgain": "दुसरा घटक शोधा",
+  "backToSearch": "शोधाकडे परत जा",
+  "noDataFound": "\"{item}\" साठी डेटा आढळला नाही.",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा.",
+  "errorOffline": "आपण ऑफलाइन आहात. आपले कनेक्शन तपासा.",
+  "retry": "पुन्हा प्रयत्न",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

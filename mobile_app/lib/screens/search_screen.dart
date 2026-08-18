@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../models/footprint_result.dart';
 import '../models/load_state.dart';
+import '../providers/locale_provider.dart';
 import '../services/footprint_api_service.dart';
 import '../services/history_service.dart';
 import '../widgets/loading_spinner.dart';
@@ -28,14 +30,18 @@ class _SearchScreenState extends State<SearchScreen> {
   String? _errorMessage;
   List<String> _history = [];
 
-  // ── Chip data: (label, emoji, color, category) ─────────────────────────
-  static const _quickPicks = [
-    ('Rice',    '🌾', Color(0xFF2DC653)),
-    ('Wheat',   '🌾', Color(0xFF2DC653)),
-    ('Lentils', '🫘', Color(0xFF2DC653)),
-    ('Potato',  '🥔', Color(0xFF2DC653)),
-    ('Mango',   '🥭', Color(0xFFFF9500)),
-    ('Chicken', '🍗', Color(0xFFD62246)),
+  // Popular items with their primary category for coloured chip rendering
+  static const List<Map<String, String>> _popular = [
+    {'name': 'rice', 'category': 'plant'},
+    {'name': 'wheat', 'category': 'plant'},
+    {'name': 'apple', 'category': 'fruit'},
+    {'name': 'banana', 'category': 'fruit'},
+    {'name': 'milk', 'category': 'dairy'},
+    {'name': 'beef', 'category': 'meat'},
+    {'name': 'chicken', 'category': 'meat'},
+    {'name': 'coffee', 'category': 'plant'},
+    {'name': 'chocolate', 'category': 'plant'},
+    {'name': 'potato', 'category': 'plant'},
   ];
 
   @override
@@ -65,7 +71,8 @@ class _SearchScreenState extends State<SearchScreen> {
     _loadHistory();
 
     try {
-      final result = await _api.getFootprint(query);
+      final lang = context.read<LocaleProvider>().locale.languageCode;
+      final result = await _api.getFootprint(query, lang: lang);
       if (!mounted) return;
       await Navigator.pushNamed(context, '/result', arguments: result);
       if (mounted) setState(() => _state = LoadState.idle);

@@ -1,0 +1,52 @@
+{
+  "@@locale": "bn",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "পানির পদচিহ্ন",
+  "searchHeading": "যেকোনো খাদ্যদ্রব্যের\nপানির খরচ জানুন",
+  "searchSubtitle": "সবুজ, নীল এবং ধূসর পানির পদচিহ্ন দেখতে খাদ্যদ্রব্য লিখুন।",
+  "searchHint": "যেমন: চাল, গম, আম…",
+  "searchLabel": "খাদ্যদ্রব্য",
+  "searchButton": "অনুসন্ধান",
+  "popularItems": "জনপ্রিয় খাদ্যদ্রব্য",
+  "scanTabLabel": "স্ক্যান",
+  "searchTabLabel": "অনুসন্ধান",
+  "scanHeading": "খাদ্যদ্রব্য স্ক্যান করুন",
+  "scanInstruction": "খাদ্যদ্রব্য শনাক্ত করতে এবং তাৎক্ষণিকভাবে পানির পদচিহ্ন জানতে ক্যামেরা সামনে ধরুন।",
+  "scanButtonCamera": "ছবি তুলুন",
+  "scanButtonGallery": "গ্যালারি থেকে বেছে নিন",
+  "scanConfirm": "পানির পদচিহ্ন দেখুন",
+  "scanAgain": "আবার স্ক্যান করুন",
+  "detected": "শনাক্ত হয়েছে",
+  "confidence": "আস্থা মাত্রা",
+  "calculating": "গণনা করা হচ্ছে…",
+  "waterBreakdown": "পানির বিভাজন",
+  "allValuesIn": "সব মান {unit} এ",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "সবুজ পানি",
+  "greenWaterSub": "বৃষ্টির পানি (কৃষি)",
+  "blueWater": "নীল পানি",
+  "blueWaterSub": "ভূগর্ভস্থ ও ভূ-পৃষ্ঠের পানি",
+  "greyWater": "ধূসর পানি",
+  "greyWaterSub": "দূষণ হ্রাসকরণ",
+  "totalLabel": "মোট",
+  "perspective": "তুলনামূলক বিশ্লেষণ",
+  "ecoTip": "পরিবেশবান্ধব পরামর্শ",
+  "searchAgain": "অন্য খাদ্যদ্রব্য অনুসন্ধান করুন",
+  "backToSearch": "অনুসন্ধানে ফিরে যান",
+  "noDataFound": "\"{item}\" এর জন্য ডেটা পাওয়া যায়নি।",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+  "errorOffline": "আপনি অফলাইনে আছেন। আপনার সংযোগ পরীক্ষা করুন।",
+  "retry": "পুনরায় চেষ্টা",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

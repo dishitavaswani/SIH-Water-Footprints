@@ -1,76 +1,124 @@
 {
   "@@locale": "en",
-  "appTitle": "Water Footprint Tracker",
-  "@appTitle": {
-    "description": "The title of the application"
-  },
-  "search": "Search food items",
-  "@search": {
-    "description": "Label for search food items"
-  },
-  "searchHint": "Type a food name (e.g., rice, apple)...",
-  "@searchHint": {
-    "description": "Placeholder hint in search bar"
-  },
-  "scan": "Scan Food",
-  "@scan": {
-    "description": "Label for scan food button"
-  },
-  "waterFootprint": "Water Footprint",
-  "@waterFootprint": {
-    "description": "Header title for water footprint result"
-  },
-  "greenWater": "Green Water (Rainwater)",
-  "@greenWater": {
-    "description": "Label for green water metric"
-  },
-  "blueWater": "Blue Water (Surface/Groundwater)",
-  "@blueWater": {
-    "description": "Label for blue water metric"
-  },
-  "greyWater": "Grey Water (Pollution dilution)",
-  "@greyWater": {
-    "description": "Label for grey water metric"
-  },
-  "tryAnother": "Try Another Item",
-  "@tryAnother": {
-    "description": "Button label to test another food item"
-  },
-  "litresPerKg": "litres/kg",
-  "@litresPerKg": {
-    "description": "Unit label for litres per kilogram"
-  },
-  "comparisonTitle": "Real-world Equivalent",
-  "@comparisonTitle": {
-    "description": "Title for comparison section"
-  },
-  "tipTitle": "Sustainability Tip",
-  "@tipTitle": {
-    "description": "Title for sustainability recommendation tip"
-  },
-  "loading": "Calculating water footprint...",
-  "@loading": {
-    "description": "Loading state message"
-  },
-  "itemNotFound": "Item not found. Try searching another food.",
-  "@itemNotFound": {
-    "description": "Error message when queried item is not in database"
-  },
-  "lowConfidence": "Could not clearly recognize the item. Please search manually.",
-  "@lowConfidence": {
-    "description": "Message when image recognition confidence is below threshold"
-  },
-  "networkError": "Network error. Please check your connection.",
-  "@networkError": {
-    "description": "Error message when backend is unreachable or offline"
-  },
+
+  "appTitle": "Water Footprint",
+  "@appTitle": { "description": "App bar title" },
+
+  "searchHeading": "Find the water cost\nof any food item",
+  "@searchHeading": { "description": "Search screen heading" },
+
+  "searchSubtitle": "Enter a food item to see its green, blue, and grey water footprint.",
+  "@searchSubtitle": { "description": "Search screen subtitle" },
+
+  "searchHint": "e.g. rice, wheat, mango…",
+  "@searchHint": { "description": "Text field hint" },
+
+  "searchLabel": "Food item",
+  "@searchLabel": { "description": "Text field label" },
+
+  "searchButton": "Search",
+  "@searchButton": { "description": "Search button label" },
+
+  "popularItems": "Popular items",
+  "@popularItems": { "description": "Popular items section label" },
+
+  "scanTabLabel": "Scan",
+  "@scanTabLabel": { "description": "Bottom nav scan tab" },
+
+  "searchTabLabel": "Search",
+  "@searchTabLabel": { "description": "Bottom nav search tab" },
+
+  "scanHeading": "Scan a Food Item",
+  "@scanHeading": { "description": "Scan screen heading" },
+
+  "scanInstruction": "Point your camera at any food item to identify it and instantly get its water footprint.",
+  "@scanInstruction": { "description": "Scan screen instruction" },
+
+  "scanButtonCamera": "Take Photo",
+  "@scanButtonCamera": { "description": "Camera button label" },
+
+  "scanButtonGallery": "Pick from Gallery",
+  "@scanButtonGallery": { "description": "Gallery button label" },
+
+  "scanConfirm": "Get Water Footprint",
+  "@scanConfirm": { "description": "Confirm scan button" },
+
+  "scanAgain": "Scan Again",
+  "@scanAgain": { "description": "Scan again button" },
+
+  "detected": "Detected",
+  "@detected": { "description": "Detected label on result" },
+
+  "confidence": "Confidence",
+  "@confidence": { "description": "Confidence label" },
+
+  "calculating": "Calculating footprint…",
+  "@calculating": { "description": "Loading text" },
+
+  "waterBreakdown": "Water Breakdown",
+  "@waterBreakdown": { "description": "Section heading" },
+
   "allValuesIn": "All values in {unit}",
   "@allValuesIn": {
-    "description": "Unit specification string",
+    "description": "Unit label",
     "placeholders": {
-      "unit": {
-        "type": "String"
-      }
+      "unit": { "type": "String" }
     }
-  }
+  },
+
+  "greenWater": "Green Water",
+  "@greenWater": { "description": "Green water label" },
+
+  "greenWaterSub": "Rain-fed (agriculture)",
+  "@greenWaterSub": { "description": "Green water sublabel" },
+
+  "blueWater": "Blue Water",
+  "@blueWater": { "description": "Blue water label" },
+
+  "blueWaterSub": "Surface & groundwater",
+  "@blueWaterSub": { "description": "Blue water sublabel" },
+
+  "greyWater": "Grey Water",
+  "@greyWater": { "description": "Grey water label" },
+
+  "greyWaterSub": "Pollution dilution",
+  "@greyWaterSub": { "description": "Grey water sublabel" },
+
+  "totalLabel": "Total",
+  "@totalLabel": { "description": "Total label" },
+
+  "perspective": "Put it in perspective",
+  "@perspective": { "description": "Comparison card title" },
+
+  "ecoTip": "Eco Tip",
+  "@ecoTip": { "description": "Tip card title" },
+
+  "searchAgain": "Search Another Item",
+  "@searchAgain": { "description": "CTA button on result screen" },
+
+  "backToSearch": "Back to Search",
+  "@backToSearch": { "description": "Back button label" },
+
+  "noDataFound": "No data found for \"{item}\".",
+  "@noDataFound": {
+    "description": "404 error message",
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": { "description": "Generic error message" },
+
+  "errorOffline": "You appear to be offline. Check your connection.",
+  "@errorOffline": { "description": "Offline error message" },
+
+  "retry": "Retry",
+  "@retry": { "description": "Retry button" },
+
+  "switchToHindi": "हिंदी",
+  "@switchToHindi": { "description": "Language toggle label shown when in English mode" },
+
+  "switchToEnglish": "English",
+  "@switchToEnglish": { "description": "Language toggle label shown when in Hindi mode" }
 }

@@ -1,0 +1,52 @@
+{
+  "@@locale": "pa",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "ਜਲ ਪੈਰ-ਚਿੰਨ੍ਹ",
+  "searchHeading": "ਕਿਸੇ ਵੀ ਭੋਜਨ ਵਸਤੂ ਦੀ\nਪਾਣੀ ਲਾਗਤ ਜਾਣੋ",
+  "searchSubtitle": "ਹਰਾ, ਨੀਲਾ ਅਤੇ ਸਲੇਟੀ ਪਾਣੀ ਪੈਰ-ਚਿੰਨ੍ਹ ਦੇਖਣ ਲਈ ਭੋਜਨ ਦਰਜ ਕਰੋ।",
+  "searchHint": "ਜਿਵੇਂ: ਚੌਲ, ਕਣਕ, ਅੰਬ…",
+  "searchLabel": "ਭੋਜਨ ਵਸਤੂ",
+  "searchButton": "ਖੋਜੋ",
+  "popularItems": "ਪ੍ਰਸਿੱਧ ਵਸਤਾਂ",
+  "scanTabLabel": "ਸਕੈਨ",
+  "searchTabLabel": "ਖੋਜ",
+  "scanHeading": "ਭੋਜਨ ਵਸਤੂ ਸਕੈਨ ਕਰੋ",
+  "scanInstruction": "ਭੋਜਨ ਦੀ ਪਛਾਣ ਕਰਨ ਅਤੇ ਤੁਰੰਤ ਉਸਦਾ ਜਲ ਪੈਰ-ਚਿੰਨ੍ਹ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਕੈਮਰਾ ਦਿਖਾਓ।",
+  "scanButtonCamera": "ਫ਼ੋਟੋ ਖਿੱਚੋ",
+  "scanButtonGallery": "ਗੈਲਰੀ ਵਿੱਚੋਂ ਚੁਣੋ",
+  "scanConfirm": "ਜਲ ਪੈਰ-ਚਿੰਨ੍ਹ ਪ੍ਰਾਪਤ ਕਰੋ",
+  "scanAgain": "ਦੁਬਾਰਾ ਸਕੈਨ ਕਰੋ",
+  "detected": "ਪਛਾਣਿਆ ਗਿਆ",
+  "confidence": "ਭਰੋਸੇ ਦਾ ਪੱਧਰ",
+  "calculating": "ਪੈਰ-ਚਿੰਨ੍ਹ ਦੀ ਗਣਨਾ ਹੋ ਰਹੀ ਹੈ…",
+  "waterBreakdown": "ਪਾਣੀ ਦੀ ਵੰਡ",
+  "allValuesIn": "ਸਾਰੇ ਮੁੱਲ {unit} ਵਿੱਚ",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "ਹਰਾ ਪਾਣੀ",
+  "greenWaterSub": "ਮੀਂਹ 'ਤੇ ਆਧਾਰਿਤ (ਖੇਤੀ)",
+  "blueWater": "ਨੀਲਾ ਪਾਣੀ",
+  "blueWaterSub": "ਧਰਤੀ ਹੇਠਲਾ ਅਤੇ ਸਤਹੀ ਪਾਣੀ",
+  "greyWater": "ਸਲੇਟੀ ਪਾਣੀ",
+  "greyWaterSub": "ਪ੍ਰਦੂਸ਼ਣ ਨਿਵਾਰਣ",
+  "totalLabel": "ਕੁੱਲ",
+  "perspective": "ਤੁਲਨਾ ਕਰਕੇ ਦੇਖੋ",
+  "ecoTip": "ਵਾਤਾਵਰਣ ਸੁਝਾਅ",
+  "searchAgain": "ਕੋਈ ਹੋਰ ਵਸਤੂ ਖੋਜੋ",
+  "backToSearch": "ਖੋਜ 'ਤੇ ਵਾਪਸ ਜਾਓ",
+  "noDataFound": "\"{item}\" ਲਈ ਕੋਈ ਡਾਟਾ ਨਹੀਂ ਮਿਲਿਆ।",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  "errorOffline": "ਤੁਸੀਂ ਔਫਲਾਈਨ ਹੋ। ਆਪਣਾ ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ।",
+  "retry": "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

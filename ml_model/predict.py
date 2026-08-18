@@ -95,9 +95,15 @@ def preprocess_image(image_path: str) -> np.ndarray:
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"Image not found at '{image_path}'")
 
-    with Image.open(image_path) as img:
-        img_rgb = img.convert("RGB")
-        img_resized = img_rgb.resize(INPUT_SIZE, Image.Resampling.BILINEAR)
+    try:
+        # Validate structural integrity first
+        with Image.open(image_path) as img:
+            img.verify()
+        with Image.open(image_path) as img:
+            img_rgb = img.convert("RGB")
+            img_resized = img_rgb.resize(INPUT_SIZE, Image.Resampling.BILINEAR)
+    except Exception as err:
+        raise ValueError(f"Corrupted or invalid image file: {err}") from err
 
     img_array = np.array(img_resized, dtype=np.float32)
     # MobileNetV2 preprocessing: [0, 255] -> [-1, 1]
@@ -115,8 +121,8 @@ def predict_label(image_path: str, confidence_threshold: float = CONFIDENCE_THRE
         confidence_threshold: Minimum confidence required (default 0.60).
 
     Returns:
-        Dict with 'label' and 'confidence' if confident, or
-        'label': None and 'message' if below threshold or on error.
+        Dict with 'label', 'confidence', and details if confident, or
+        'label': None, 'reason', and 'message' if below threshold or on error.
     """
     try:
         interpreter = _get_interpreter()
@@ -133,9 +139,11 @@ def predict_label(image_path: str, confidence_threshold: float = CONFIDENCE_THRE
         top_idx = int(np.argmax(output_data))
         confidence = float(output_data[top_idx])
 
-        if top_idx >= len(labels):
+        if top_idx < 0 or top_idx >= len(labels):
             return {
                 "label": None,
+                "confidence": round(confidence, 4),
+                "reason": "invalid_class_index",
                 "message": f"Predicted index {top_idx} out of range for labels ({len(labels)} classes)."
             }
 
@@ -144,22 +152,37 @@ def predict_label(image_path: str, confidence_threshold: float = CONFIDENCE_THRE
         if confidence >= confidence_threshold:
             return {
                 "label": predicted_class,
+                "predicted_label": predicted_class,
                 "confidence": round(confidence, 4)
             }
         else:
             return {
                 "label": None,
-                "message": "Could not confidently identify this item"
+                "confidence": round(confidence, 4),
+                "suggested_label": predicted_class,
+                "reason": "low_confidence",
+                "message": "I couldn't confidently identify this item. Try a clearer photo with the food centered in the frame."
             }
 
     except FileNotFoundError as fnf_err:
         return {
             "label": None,
+            "confidence": 0.0,
+            "reason": "file_not_found",
             "message": str(fnf_err)
+        }
+    except ValueError as val_err:
+        return {
+            "label": None,
+            "confidence": 0.0,
+            "reason": "invalid_image",
+            "message": str(val_err)
         }
     except Exception as err:
         return {
             "label": None,
+            "confidence": 0.0,
+            "reason": "inference_error",
             "message": f"Inference failed: {err}"
         }
 

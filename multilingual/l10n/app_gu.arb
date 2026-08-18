@@ -1,0 +1,52 @@
+{
+  "@@locale": "gu",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "વોટર ફૂટપ્રિન્ટ",
+  "searchHeading": "કોઈપણ ખોરાક વસ્તુનો\nપાણી ખર્ચ શોધો",
+  "searchSubtitle": "લીલું, વાદળી અને ગ્રે પાણીનો વપરાશ જોવા માટે ખોરાક દાખલ કરો.",
+  "searchHint": "દા.ત. ચોખા, ઘઉં, કેરી…",
+  "searchLabel": "ખોરાકની વસ્તુ",
+  "searchButton": "શોધો",
+  "popularItems": "લોકપ્રિય વસ્તુઓ",
+  "scanTabLabel": "સ્કેન",
+  "searchTabLabel": "શોધ",
+  "scanHeading": "ખોરાકની વસ્તુ સ્કેન કરો",
+  "scanInstruction": "ખોરાકની ઓળખ કરવા અને તેનો વોટર ફૂટપ્રિન્ટ તરત મેળવવા માટે કેમેરો સામે રાખો.",
+  "scanButtonCamera": "ફોટો લો",
+  "scanButtonGallery": "ગેલેરીમાંથી પસંદ કરો",
+  "scanConfirm": "વોટર ફૂટપ્રિન્ટ મેળવો",
+  "scanAgain": "ફરીથી સ્કેન કરો",
+  "detected": "ઓળખાયેલ",
+  "confidence": "વિશ્વાસ સ્તર",
+  "calculating": "ગણતરી કરી રહ્યાં છીએ…",
+  "waterBreakdown": "પાણીનું વિભાજન",
+  "allValuesIn": "બધા મૂલ્યો {unit} માં",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "લીલું પાણી",
+  "greenWaterSub": "વરસાદ આધારિત (ખેતી)",
+  "blueWater": "વાદળી પાણી",
+  "blueWaterSub": "ભૂગર્ભજળ અને સપાટીનું પાણી",
+  "greyWater": "ગ્રે પાણી",
+  "greyWaterSub": "પ્રદૂષણ ઘટાડો",
+  "totalLabel": "કુલ",
+  "perspective": "તુલનામાં જુઓ",
+  "ecoTip": "પર્યાવરણ ટિપ",
+  "searchAgain": "બીજી વસ્તુ શોધો",
+  "backToSearch": "શોધ પર પાછા જાઓ",
+  "noDataFound": "\"{item}\" માટે ડેટા મળ્યો નથી.",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "કંઈક ખોટું થયું. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "errorOffline": "તમે ઑફલાઇન છો. તમારું કનેક્શન તપાસો.",
+  "retry": "ફરી પ્રયાસ કરો",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}

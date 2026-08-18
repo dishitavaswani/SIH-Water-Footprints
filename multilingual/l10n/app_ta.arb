@@ -1,0 +1,52 @@
+{
+  "@@locale": "ta",
+  "@@x_verification_status": "needs_verification",
+
+  "appTitle": "நீர் தடம்",
+  "searchHeading": "எந்த உணவுப் பொருளின்\nநீர் செலவையும் கண்டறியவும்",
+  "searchSubtitle": "பச்சை, நீல மற்றும் சாம்பல் நீர் தடத்தை காண உணவுப் பெயரை உள்ளிடவும்.",
+  "searchHint": "எ.கா. அரிசி, கோதுமை, மாம்பழம்…",
+  "searchLabel": "உணவுப் பொருள்",
+  "searchButton": "தேடு",
+  "popularItems": "பிரபலமானவை",
+  "scanTabLabel": "ஸ்கேன்",
+  "searchTabLabel": "தேடல்",
+  "scanHeading": "உணவுப் பொருளை ஸ்கேன் செய்",
+  "scanInstruction": "உணவை அடையாளம் காணவும் அதன் நீர் தடத்தை உடனடியாக அறியவும் கேமராவை காட்டுங்கள்.",
+  "scanButtonCamera": "புகைப்படம் எடு",
+  "scanButtonGallery": "கேலரியில் இருந்து தேர்வு செய்",
+  "scanConfirm": "நீர் தடத்தை பெறு",
+  "scanAgain": "மீண்டும் ஸ்கேன் செய்",
+  "detected": "கண்டறியப்பட்டது",
+  "confidence": "நம்பகத்தன்மை",
+  "calculating": "கணக்கிடப்படுகிறது…",
+  "waterBreakdown": "நீர் பிரிவு",
+  "allValuesIn": "அனைத்து மதிப்புகளும் {unit} இல்",
+  "@allValuesIn": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "greenWater": "பச்சை நீர்",
+  "greenWaterSub": "மழைநீர் (வேளாண்மை)",
+  "blueWater": "நீல நீர்",
+  "blueWaterSub": "நிலத்தடி மற்றும் மேற்பரப்பு நீர்",
+  "greyWater": "சாம்பல் நீர்",
+  "greyWaterSub": "மாசு நீர்த்தல்",
+  "totalLabel": "மொத்தம்",
+  "perspective": "ஒப்பீடு செய்து பாருங்கள்",
+  "ecoTip": "சுற்றுச்சூழல் குறிப்பு",
+  "searchAgain": "மற்றொரு பொருளைத் தேடுங்கள்",
+  "backToSearch": "தேடலுக்கு திரும்பு",
+  "noDataFound": "\"{item}\" க்கான தரவு கிடைக்கவில்லை.",
+  "@noDataFound": {
+    "placeholders": {
+      "item": { "type": "String" }
+    }
+  },
+  "errorGeneric": "ஏதோ தவறு நடந்துவிட்டது. மீண்டும் முயற்சிக்கவும்.",
+  "errorOffline": "நீங்கள் ஆஃப்லைனில் உள்ளீர்கள். இணைப்பைச் சரிபார்க்கவும்.",
+  "retry": "மீண்டும் முயற்சி செய்",
+  "switchToHindi": "हिंदी",
+  "switchToEnglish": "English"
+}
