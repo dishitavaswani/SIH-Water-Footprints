@@ -279,6 +279,7 @@ const i18n = {
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     setupLanguageSelector();
+    setupSearchForm();
     setupDropzone();
     loadDatabaseCatalog();
     checkBackendHealth();
@@ -289,6 +290,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load default item
     searchItem('rice');
 });
+
+function setupSearchForm() {
+    const form = document.getElementById('search-form');
+    const btn = document.getElementById('search-submit-btn');
+    const input = document.getElementById('search-input');
+
+    if (form) {
+        form.onsubmit = function(e) {
+            if (e) e.preventDefault();
+            handleSearch(e);
+            return false;
+        };
+    }
+    if (btn) {
+        btn.onclick = function(e) {
+            if (e) e.preventDefault();
+            handleSearch(e);
+            return false;
+        };
+    }
+    if (input) {
+        input.onkeydown = function(e) {
+            if (e.key === 'Enter') {
+                if (e) e.preventDefault();
+                handleSearch(e);
+                return false;
+            }
+        };
+    }
+}
 
 async function checkBackendHealth() {
     try {
@@ -450,15 +481,39 @@ function setupDropzone() {
     });
 }
 
+function triggerFileInput() {
+    console.log('[AI Lens Debug] Triggering file-input click event');
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) {
+        fileInput.click();
+    } else {
+        console.error('[AI Lens Debug] CRITICAL: file-input element not found in DOM');
+    }
+}
+
 function handleFileSelected(event) {
     if (event.target.files && event.target.files.length > 0) {
+        console.log('[AI Lens Debug] Change event triggered on file-input');
         handleFile(event.target.files[0]);
+    } else {
+        console.log('[AI Lens Debug] File selection cancelled or empty');
     }
 }
 
 function handleFile(file) {
-    if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file (JPEG/PNG).');
+    if (!file) {
+        console.log('[AI Lens Debug] No file object passed');
+        return;
+    }
+
+    console.log('[AI Lens Debug] IMAGE SELECTED:', {
+        name: file.name,
+        type: file.type || 'unknown',
+        size: file.size,
+    });
+
+    if (file.type && !file.type.startsWith('image/')) {
+        alert("This image format isn't supported. Please choose a JPG, PNG, or WebP image.");
         return;
     }
 
@@ -466,56 +521,116 @@ function handleFile(file) {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-        document.getElementById('preview-image').src = e.target.result;
-        document.getElementById('dropzone-content').classList.add('hidden');
-        document.getElementById('dropzone-preview').classList.remove('hidden');
-        document.getElementById('btn-run-scan').disabled = false;
+        const previewImg = document.getElementById('preview-img') || document.getElementById('preview-image');
+        const dropzoneIdle = document.getElementById('dropzone-idle') || document.getElementById('dropzone-content');
+        const dropzonePreview = document.getElementById('dropzone-preview');
+        const scanActions = document.getElementById('scan-actions');
+
+        if (previewImg) previewImg.src = e.target.result;
+        if (dropzoneIdle) dropzoneIdle.classList.add('hidden');
+        if (dropzonePreview) dropzonePreview.classList.remove('hidden');
+        if (scanActions) scanActions.classList.remove('hidden');
+
+        console.log('[AI Lens Debug] PREVIEW CREATED & DISPLAYED FOR:', file.name);
+    };
+    reader.onerror = (err) => {
+        console.error('[AI Lens Debug] FileReader error:', err);
+        alert("Couldn't process this image. Please try another photo.");
     };
     reader.readAsDataURL(file);
 }
 
 function removeFile(event) {
-    event.stopPropagation();
+    if (event) event.stopPropagation();
     selectedFile = null;
-    document.getElementById('file-input').value = '';
-    document.getElementById('dropzone-preview').classList.add('hidden');
-    document.getElementById('dropzone-content').classList.remove('hidden');
-    document.getElementById('btn-run-scan').disabled = true;
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) fileInput.value = '';
+
+    const dropzoneIdle = document.getElementById('dropzone-idle') || document.getElementById('dropzone-content');
+    const dropzonePreview = document.getElementById('dropzone-preview');
+    const scanActions = document.getElementById('scan-actions');
+
+    if (dropzonePreview) dropzonePreview.classList.add('hidden');
+    if (dropzoneIdle) dropzoneIdle.classList.remove('hidden');
+    if (scanActions) scanActions.classList.add('hidden');
+
+    console.log('[AI Lens Debug] Image state reset');
+}
+
+function executeScan() {
+    console.log('[AI Lens Debug] executeScan triggered');
+    runScan();
+}
+
+function switchTab(tab) {
+    const tabSearchBtn = document.getElementById('tab-search-btn');
+    const tabScanBtn = document.getElementById('tab-scan-btn');
+    const tabSearch = document.getElementById('tab-search');
+    const tabScan = document.getElementById('tab-scan');
+
+    if (tab === 'search') {
+        if (tabSearchBtn) tabSearchBtn.classList.add('active');
+        if (tabScanBtn) tabScanBtn.classList.remove('active');
+        if (tabSearch) tabSearch.classList.remove('hidden');
+        if (tabScan) tabScan.classList.add('hidden');
+    } else {
+        if (tabScanBtn) tabScanBtn.classList.add('active');
+        if (tabSearchBtn) tabSearchBtn.classList.remove('active');
+        if (tabScan) tabScan.classList.remove('hidden');
+        if (tabSearch) tabSearch.classList.add('hidden');
+    }
 }
 
 function selectChip(itemName) {
-    document.getElementById('search-input').value = itemName;
+    const input = document.getElementById('search-input');
+    if (input) {
+        input.value = itemName;
+    }
     searchItem(itemName);
 }
 
 async function handleSearch(event) {
-    event.preventDefault();
-    const query = document.getElementById('search-input').value.trim();
-    if (query) {
-        searchItem(query);
+    if (event) event.preventDefault();
+    const query = document.getElementById('search-input')?.value?.trim();
+    if (!query) {
+        renderError("No Input Entered", "Enter a product to analyze.");
+        return;
     }
+    searchItem(query);
 }
 
 async function searchItem(itemName) {
-    showLoading();
+    const cleanName = itemName ? itemName.trim() : '';
+    if (!cleanName) {
+        renderError("No Input Entered", "Enter a product to analyze.");
+        return;
+    }
+
+    showLoading("Searching product database...");
 
     try {
-        const res = await fetch(`/footprint?item=${encodeURIComponent(itemName)}&lang=${currentLang}`);
+        const res = await fetch(`/footprint?item=${encodeURIComponent(cleanName)}&lang=${currentLang}`);
         if (res.ok) {
             const data = await res.json();
             renderResult(data);
+        } else if (res.status === 404) {
+            renderError("Product Not Found", `We couldn't find "${cleanName}" in our database.`);
         } else {
-            renderNotFound(itemName);
+            renderError("Search Failed", "Unable to connect to the recognition service. Please try again.");
         }
     } catch (error) {
-        renderNotFound(itemName);
+        console.error('Search API fetch error:', error);
+        renderError("Service Unavailable", "Unable to connect to the recognition service. Please try again.");
     }
 }
 
 async function runScan() {
-    if (!selectedFile) return;
+    if (!selectedFile) {
+        renderError("No Image Selected", "Choose an image to scan.");
+        return;
+    }
 
-    showLoading();
+    showLoading("Running AI visual recognition & calculating footprint...");
 
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -530,90 +645,126 @@ async function runScan() {
             const data = await res.json();
             if (data.success) {
                 renderResult(data);
-                // Switch to search tab to view rendered result nicely
-                switchTab('search');
             } else {
-                renderNotFound(data.suggested_label || 'Unrecognized Image');
+                const title = data.reason === 'low_confidence' ? "Low Confidence Recognition" : "Recognition Failure";
+                const msg = data.message || "I couldn't confidently identify this item. Try a clearer image.";
+                renderError(title, msg);
             }
+        } else if (res.status === 413) {
+            renderError("Image Too Large", "Image is too large. Please choose a smaller image.");
+        } else if (res.status === 415) {
+            renderError("Invalid Image Format", "Please select a valid JPG or PNG image.");
         } else {
-            renderNotFound('Image Scan');
+            renderError("Scan Error", "I couldn't confidently identify this item. Try a clearer image.");
         }
     } catch (error) {
-        renderNotFound('Image Scan');
+        console.error('Scan API upload error:', error);
+        renderError("Service Unavailable", "Unable to connect to the recognition service. Please try again.");
     }
 }
 
-function showLoading() {
-    document.getElementById('result-placeholder').classList.add('hidden');
-    document.getElementById('result-content').classList.add('hidden');
-    document.getElementById('result-notfound').classList.add('hidden');
-    document.getElementById('result-loading').classList.remove('hidden');
+function showLoading(messageText) {
+    const loadingCard = document.getElementById('loading-state');
+    const loadingMsg = document.getElementById('loading-text');
+    const errorCard = document.getElementById('error-card');
+    const resultCard = document.getElementById('result-card');
 
-    const t = i18n[currentLang] || i18n.en;
-    document.getElementById('loading-message').textContent = t.loadingText;
+    if (errorCard) errorCard.classList.add('hidden');
+    if (resultCard) resultCard.classList.add('hidden');
+    if (loadingMsg) loadingMsg.textContent = messageText || "Retrieving water footprint metrics...";
+    if (loadingCard) loadingCard.classList.remove('hidden');
 }
 
 function renderResult(data) {
-    document.getElementById('result-loading').classList.add('hidden');
-    document.getElementById('result-placeholder').classList.add('hidden');
-    document.getElementById('result-notfound').classList.add('hidden');
-    document.getElementById('result-content').classList.remove('hidden');
+    const loadingCard = document.getElementById('loading-state');
+    const errorCard = document.getElementById('error-card');
+    const resultCard = document.getElementById('result-card');
 
-    // Title & Confidence badge
-    document.getElementById('res-item-title').textContent = capitalize(data.item);
+    if (loadingCard) loadingCard.classList.add('hidden');
+    if (errorCard) errorCard.classList.add('hidden');
+    if (resultCard) resultCard.classList.remove('hidden');
+
+    // Product Title & Description
+    const itemNameEl = document.getElementById('res-item-name');
+    const itemDescEl = document.getElementById('res-description');
+
+    const displayName = data.item || data.item_name || data.item_details?.display_name || 'Agricultural Item';
+    if (itemNameEl) itemNameEl.textContent = capitalize(displayName);
     
-    const confBadge = document.getElementById('res-conf-badge');
-    if (data.confidence !== undefined) {
-        confBadge.classList.remove('hidden');
-        document.getElementById('res-conf-val').textContent = `${Math.round(data.confidence * 100)}%`;
-    } else {
-        confBadge.classList.add('hidden');
-    }
+    const descriptionText = data.description || data.item_details?.description || data.comparison || '';
+    if (itemDescEl) itemDescEl.textContent = descriptionText;
 
-    // Totals
-    const total = Number(data.total_litres_per_kg);
-    document.getElementById('res-total-val').textContent = total.toLocaleString();
-    document.getElementById('res-total-unit').textContent = data.unit || 'litres/kg';
+    // Total Water Footprint
+    const totalValEl = document.getElementById('res-total-wf');
+    const totalUnitEl = document.getElementById('res-unit');
+    const comparisonEl = document.getElementById('res-comparison');
+
+    const total = Number(data.total_litres_per_kg || data.water_footprint?.total || 0);
+    if (totalValEl) totalValEl.textContent = total.toLocaleString();
+    if (totalUnitEl) totalUnitEl.textContent = data.unit || data.water_footprint?.unit || 'litres/kg';
+    if (comparisonEl) comparisonEl.textContent = data.comparison || 'Data calculated based on standard agricultural yields.';
 
     // Breakdown values
-    const green = Number(data.green_wf || data.green_water_litres || 0);
-    const blue = Number(data.blue_wf || data.blue_water_litres || 0);
-    const grey = Number(data.grey_wf || data.grey_water_litres || 0);
+    const green = Number(data.green_wf ?? data.green_water_litres ?? data.water_footprint?.green ?? 0);
+    const blue = Number(data.blue_wf ?? data.blue_water_litres ?? data.water_footprint?.blue ?? 0);
+    const grey = Number(data.grey_wf ?? data.grey_water_litres ?? data.water_footprint?.grey ?? 0);
 
-    document.getElementById('val-green').textContent = `${green.toLocaleString()} L`;
-    document.getElementById('val-blue').textContent = `${blue.toLocaleString()} L`;
-    document.getElementById('val-grey').textContent = `${grey.toLocaleString()} L`;
+    const greenValEl = document.getElementById('res-green-val');
+    const blueValEl = document.getElementById('res-blue-val');
+    const greyValEl = document.getElementById('res-grey-val');
 
-    // Percentage bars
-    const safeTotal = total > 0 ? total : 1;
+    if (greenValEl) greenValEl.textContent = `${green.toLocaleString()} L`;
+    if (blueValEl) blueValEl.textContent = `${blue.toLocaleString()} L`;
+    if (greyValEl) greyValEl.textContent = `${grey.toLocaleString()} L`;
+
+    // Breakdown percentages & progress fills
+    const safeTotal = total > 0 ? total : (green + blue + grey) || 1;
     const pctGreen = Math.round((green / safeTotal) * 100);
     const pctBlue = Math.round((blue / safeTotal) * 100);
     const pctGrey = Math.round((grey / safeTotal) * 100);
 
-    document.getElementById('pct-green').textContent = `${pctGreen}%`;
-    document.getElementById('pct-blue').textContent = `${pctBlue}%`;
-    document.getElementById('pct-grey').textContent = `${pctGrey}%`;
+    const pctGreenEl = document.getElementById('res-green-pct');
+    const pctBlueEl = document.getElementById('res-blue-pct');
+    const pctGreyEl = document.getElementById('res-grey-pct');
 
-    document.getElementById('bar-green').style.width = `${pctGreen}%`;
-    document.getElementById('bar-blue').style.width = `${pctBlue}%`;
-    document.getElementById('bar-grey').style.width = `${pctGrey}%`;
+    if (pctGreenEl) pctGreenEl.textContent = `${pctGreen}%`;
+    if (pctBlueEl) pctBlueEl.textContent = `${pctBlue}%`;
+    if (pctGreyEl) pctGreyEl.textContent = `${pctGrey}%`;
 
-    // Comparison benchmark
-    document.getElementById('res-comparison-text').textContent = data.comparison || 'Data calculated based on standard agricultural yields.';
+    const fillGreenEl = document.getElementById('fill-green');
+    const fillBlueEl = document.getElementById('fill-blue');
+    const fillGreyEl = document.getElementById('fill-grey');
 
-    // Sustainability Tip
-    document.getElementById('res-tip-text').textContent = data.tip || 'Choosing locally sourced produce significantly reduces overall water stress.';
+    if (fillGreenEl) fillGreenEl.style.width = `${pctGreen}%`;
+    if (fillBlueEl) fillBlueEl.style.width = `${pctBlue}%`;
+    if (fillGreyEl) fillGreyEl.style.width = `${pctGrey}%`;
+
+    // Actionable Sustainability Tip
+    const tipEl = document.getElementById('res-tip');
+    if (tipEl) tipEl.textContent = data.tip || 'Choosing locally sourced produce significantly reduces overall water stress.';
+
+    // Scroll smoothly to the result section
+    if (resultCard) {
+        resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 }
 
-function renderNotFound(item) {
-    document.getElementById('result-loading').classList.add('hidden');
-    document.getElementById('result-placeholder').classList.add('hidden');
-    document.getElementById('result-content').classList.add('hidden');
-    document.getElementById('result-notfound').classList.remove('hidden');
+function renderError(titleText, messageText) {
+    const loadingCard = document.getElementById('loading-state');
+    const resultCard = document.getElementById('result-card');
+    const errorCard = document.getElementById('error-card');
+    const errorTitleEl = document.getElementById('error-title');
+    const errorMsgEl = document.getElementById('error-message');
 
-    const t = i18n[currentLang] || i18n.en;
-    document.getElementById('notfound-title').textContent = `${t.notFoundTitle}: "${item}"`;
-    document.getElementById('notfound-desc').textContent = t.notFoundDesc;
+    if (loadingCard) loadingCard.classList.add('hidden');
+    if (resultCard) resultCard.classList.add('hidden');
+
+    if (errorTitleEl) errorTitleEl.textContent = titleText || "Item Not Found";
+    if (errorMsgEl) errorMsgEl.textContent = messageText || "Could not find water footprint data for this item.";
+    if (errorCard) {
+        errorCard.classList.remove('hidden');
+        errorCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 }
 
 async function loadDatabaseCatalog() {
@@ -630,20 +781,25 @@ async function loadDatabaseCatalog() {
                 const card = document.createElement('div');
                 card.className = 'catalog-card';
                 card.onclick = () => {
-                    document.getElementById('search-input').value = it.item;
-                    searchItem(it.item);
-                    window.scrollTo({ top: 400, behavior: 'smooth' });
+                    selectChip(it.item);
+                    window.scrollTo({ top: 300, behavior: 'smooth' });
                 };
+
+                const totalVal = Number(it.total_litres_per_kg || 0);
+                const gVal = Number(it.green_wf || 0);
+                const bVal = Number(it.blue_wf || 0);
+                const grVal = Number(it.grey_wf || 0);
+                const sTot = totalVal > 0 ? totalVal : 1;
 
                 card.innerHTML = `
                     <div class="catalog-card-header">
                         <span class="catalog-card-name">${capitalize(it.item)}</span>
-                        <span class="catalog-card-wf">${Number(it.total_litres_per_kg).toLocaleString()} L/kg</span>
+                        <span class="catalog-card-wf">${totalVal.toLocaleString()} L/kg</span>
                     </div>
                     <div class="catalog-mini-bar">
-                        <div class="mini-bar-green" style="width: ${(it.green_wf / it.total_litres_per_kg) * 100}%"></div>
-                        <div class="mini-bar-blue" style="width: ${(it.blue_wf / it.total_litres_per_kg) * 100}%"></div>
-                        <div class="mini-bar-grey" style="width: ${(it.grey_wf / it.total_litres_per_kg) * 100}%"></div>
+                        <div class="mini-bar-green" style="width: ${(gVal / sTot) * 100}%"></div>
+                        <div class="mini-bar-blue" style="width: ${(bVal / sTot) * 100}%"></div>
+                        <div class="mini-bar-grey" style="width: ${(grVal / sTot) * 100}%"></div>
                     </div>
                 `;
                 grid.appendChild(card);

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import '../models/footprint_result.dart';
 
 /// HTTP service for the Water Footprint FastAPI backend.
@@ -8,9 +9,6 @@ import '../models/footprint_result.dart';
 /// Change to Aryaveer's deployed URL (Render / Railway) when live.
 ///
 /// [lang] is passed as a query param to support EN/HI server-side responses.
-///
-/// **Phase 1 mock:** If the server is unreachable, a realistic mock result
-/// is returned automatically so the UI can be built and tested independently.
 class FootprintApiService {
   final String baseUrl;
   final String lang;
@@ -24,17 +22,16 @@ class FootprintApiService {
 
   /// Looks up the water footprint for [item].
   ///
-  /// Throws [FootprintNotFoundException] on 404.
-  /// Falls back to [_mockResult] when the server is unreachable.
+  /// Throws [FootprintNotFoundException] if not in DB.
+  /// Throws [FootprintApiException] on error.
   Future<FootprintResult> getFootprint(String item, {String? lang}) async {
     final effectiveLang = lang ?? this.lang;
-    final uri = Uri.parse(baseUrl).replace(
-      path: '/footprint',
-      queryParameters: {
-        'item': item.trim().toLowerCase(),
-        'lang': effectiveLang,
-      },
-    );
+    final Uri uri;
+    if (baseUrl.endsWith('/')) {
+      uri = Uri.parse('${baseUrl}footprint?item=${Uri.encodeComponent(item)}&lang=$effectiveLang');
+    } else {
+      uri = Uri.parse('$baseUrl/footprint?item=${Uri.encodeComponent(item)}&lang=$effectiveLang');
+    }
 
     try {
       final response =
@@ -47,34 +44,39 @@ class FootprintApiService {
         throw FootprintNotFoundException(item);
       } else {
         throw FootprintApiException(
-            'Server error ${response.statusCode}');
+            'Unable to connect to the recognition service. Please check your connection.');
       }
     } on FootprintNotFoundException {
       rethrow;
     } on FootprintApiException {
       rethrow;
     } catch (_) {
-      // Server not available — return mock so UI is testable
-      return _mockResult(item);
+      throw FootprintApiException(
+          'Unable to connect to the recognition service. Please check your connection.');
     }
   }
 
   // ─── POST /scan ────────────────────────────────────────────────────────────
 
-  /// Sends [imageBytes] as multipart to POST /scan.
+  /// Sends raw image bytes [imageBytes] to `POST /scan`.
   ///
   /// Returns a [FootprintResult] with the detected food item.
-  /// Falls back to [_mockResult] when server is unreachable.
   Future<FootprintResult> scanImage(
     List<int> imageBytes, {
     String filename = 'capture.jpg',
     String? lang,
   }) async {
     final effectiveLang = lang ?? this.lang;
-    final uri = Uri.parse(baseUrl).replace(
-      path: '/scan',
-      queryParameters: {'lang': effectiveLang},
-    );
+    final String cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
+    final Uri uri = Uri.parse('$cleanBase/scan?lang=$effectiveLang');
+
+    String subType = 'jpeg';
+    final String ext = filename.split('.').last.toLowerCase();
+    if (ext == 'png') {
+      subType = 'png';
+    } else if (ext == 'webp') {
+      subType = 'webp';
+    }
 
     try {
       final request = http.MultipartRequest('POST', uri)
@@ -82,6 +84,7 @@ class FootprintApiService {
           'file',
           imageBytes,
           filename: filename,
+          contentType: MediaType('image', subType),
         ));
 
       final streamed =
@@ -93,22 +96,32 @@ class FootprintApiService {
             jsonDecode(response.body) as Map<String, dynamic>;
         if (data['success'] == false) {
           final msg = data['message'] as String? ??
-              'Could not confidently identify this item.';
+              "Couldn't process this image. Please try another photo.";
           throw FootprintApiException(msg);
         }
         return FootprintResult.fromJson(data);
+      } else if (response.statusCode == 400) {
+        throw FootprintApiException(
+            "Couldn't process this image. Please try another photo.");
+      } else if (response.statusCode == 413) {
+        throw FootprintApiException(
+            "The image file is too large. Please select a smaller photo.");
+      } else if (response.statusCode == 415) {
+        throw FootprintApiException(
+            "This image format isn't supported. Please choose a JPG or PNG image.");
       } else if (response.statusCode == 404) {
         throw FootprintNotFoundException('scanned item');
       } else {
         throw FootprintApiException(
-            'Scan error ${response.statusCode}');
+            "Unable to connect to the recognition service. Please check your connection.");
       }
     } on FootprintNotFoundException {
       rethrow;
     } on FootprintApiException {
       rethrow;
     } catch (_) {
-      return _mockResult('rice (detected)');
+      throw FootprintApiException(
+          "Unable to connect to the recognition service. Please check your connection.");
     }
   }
 

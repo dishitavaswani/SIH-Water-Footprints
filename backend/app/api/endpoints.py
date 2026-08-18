@@ -6,6 +6,7 @@ import shutil
 import tempfile
 from pathlib import Path
 from typing import Optional, List, Dict, Any
+from PIL import Image
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query, status
 from fastapi.responses import JSONResponse
@@ -124,6 +125,7 @@ def get_footprint(
     return {
         "item": item_name,
         "item_name": item_name,
+        "description": comparison,
         "total_litres_per_kg": total,
         "green_water_litres": green,
         "blue_water_litres": blue,
@@ -138,19 +140,32 @@ def get_footprint(
     }
 
 
+@router.post("/upload-test", tags=["Scanning"])
+async def upload_test(
+    file: UploadFile = File(..., description="Image file to test upload transmission"),
+) -> Dict[str, Any]:
+    """Diagnostic endpoint to test image transmission without running ML inference."""
+    content = await file.read()
+    if len(content) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Uploaded file is empty.",
+        )
+    return {
+        "success": True,
+        "filename": file.filename or "uploaded_image.jpg",
+        "content_type": file.content_type or "image/jpeg",
+        "size": len(content),
+    }
+
+
 @router.post("/scan", tags=["Scanning"])
 async def scan_image(
     file: UploadFile = File(..., description="Image file of the agricultural product/food"),
     lang: str = Query("en", description="Target response language code (e.g. 'en', 'hi', 'mr', 'gu', 'bn', 'ta', 'te', 'kn', 'ml', 'pa')"),
 ) -> Dict[str, Any]:
     """Accepts an image upload, recognizes the product with ML, and returns its water footprint."""
-    if not file.content_type or not file.content_type.startswith("image/"):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Uploaded file must be a valid image (e.g. image/jpeg, image/png).",
-        )
-
-    # Validate language code against registry
+    # 1. Validate language code against registry
     canonical_lang = normalize_language_code(lang)
     if not canonical_lang:
         supported = ", ".join(get_supported_codes())
@@ -159,11 +174,66 @@ async def scan_image(
             detail=f"Unsupported language '{lang}'. Supported languages: {supported}",
         )
 
-    # Save to a temporary file
-    suffix = Path(file.filename or "scan.jpg").suffix or ".jpg"
+    # 2. Validate file size (Max 15 MB)
+    MAX_FILE_SIZE = 15 * 1024 * 1024
+    image_bytes = await file.read()
+    if len(image_bytes) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="Image file is too large. Maximum allowed size is 15 MB.",
+        )
+    if len(image_bytes) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Uploaded file is empty.",
+        )
+
+    # 3. Validate image format & extension
+    filename = file.filename or "scan.jpg"
+    ext = Path(filename).suffix.lower()
+    allowed_extensions = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
+
+    is_image_mime = bool(file.content_type and file.content_type.startswith("image/"))
+    is_image_ext = ext in allowed_extensions
+
+    if not is_image_mime and not is_image_ext:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Unsupported image format. Please upload a JPG, PNG, or WebP image.",
+        )
+
+    # 4. Save to temporary file for validation and ML inference
+    suffix = ext if is_image_ext else ".jpg"
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
         tmp_path = tmp.name
-        shutil.copyfileobj(file.file, tmp)
+        tmp.write(image_bytes)
+
+    img_format = "JPEG"
+    width, height = 0, 0
+    # 5. Decode image with PIL to verify integrity & dimensions
+    try:
+        with Image.open(tmp_path) as img:
+            img.verify()
+        with Image.open(tmp_path) as img:
+            width, height = img.size
+            img_format = img.format or "JPEG"
+            if width <= 0 or height <= 0:
+                os.unlink(tmp_path)
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Invalid image dimensions.",
+                )
+    except HTTPException:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise
+    except Exception as err:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid or corrupted image file: {err}",
+        )
 
     try:
         recognized_label = None
@@ -185,6 +255,18 @@ async def scan_image(
             except Exception as ml_err:
                 ml_message = f"Model evaluation error: {ml_err}"
 
+        debug_info = {
+            "received_filename": filename,
+            "image_format": img_format,
+            "image_dimensions": [width, height],
+            "model_input_shape": ml_res.get("model_input_shape", [1, 224, 224, 3]) if isinstance(ml_res, dict) else [1, 224, 224, 3],
+            "model_input_dtype": ml_res.get("model_input_dtype", "float32") if isinstance(ml_res, dict) else "float32",
+            "output_tensor_shape": ml_res.get("output_tensor_shape", [1, 17]) if isinstance(ml_res, dict) else [1, 17],
+            "predicted_class_index": ml_res.get("predicted_class_index", 0) if isinstance(ml_res, dict) else 0,
+            "predicted_class_label": recognized_label,
+            "confidence": round(confidence, 4),
+        }
+
         # Defensive validation: Low confidence or unrecognized item
         if not recognized_label or confidence < 0.60:
             suggested_display = ml_res.get("suggested_label") if isinstance(ml_res, dict) else recognized_label
@@ -204,6 +286,7 @@ async def scan_image(
                     "suggested_label": suggested_display,
                     "canonical_label": recognized_label,
                     "lang": canonical_lang,
+                    "debug_info": debug_info,
                 },
             )
 
@@ -224,6 +307,7 @@ async def scan_image(
                     "suggested_label": recognized_label,
                     "canonical_label": recognized_label,
                     "lang": canonical_lang,
+                    "debug_info": debug_info,
                 },
             )
 
@@ -262,6 +346,7 @@ async def scan_image(
             "comparison": comparison,
             "tip": tip,
             "lang": canonical_lang,
+            "debug_info": debug_info,
             "item_details": {
                 "canonical_name": recognized_label,
                 "display_name": label_display,

@@ -149,11 +149,19 @@ def predict_label(image_path: str, confidence_threshold: float = CONFIDENCE_THRE
 
         predicted_class = labels[top_idx]
 
+        tensor_meta = {
+            "predicted_class_index": top_idx,
+            "model_input_shape": _INPUT_DETAILS[0]["shape"].tolist(),
+            "model_input_dtype": _INPUT_DETAILS[0]["dtype"].__name__,
+            "output_tensor_shape": _OUTPUT_DETAILS[0]["shape"].tolist(),
+        }
+
         if confidence >= confidence_threshold:
             return {
                 "label": predicted_class,
                 "predicted_label": predicted_class,
-                "confidence": round(confidence, 4)
+                "confidence": round(confidence, 4),
+                **tensor_meta,
             }
         else:
             return {
@@ -161,7 +169,8 @@ def predict_label(image_path: str, confidence_threshold: float = CONFIDENCE_THRE
                 "confidence": round(confidence, 4),
                 "suggested_label": predicted_class,
                 "reason": "low_confidence",
-                "message": "I couldn't confidently identify this item. Try a clearer photo with the food centered in the frame."
+                "message": "I couldn't confidently identify this item. Try a clearer photo with the food centered in the frame.",
+                **tensor_meta,
             }
 
     except FileNotFoundError as fnf_err:

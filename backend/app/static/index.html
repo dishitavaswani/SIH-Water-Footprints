@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=1.0.2">
 </head>
 <body>
     <div class="glow-bg glow-1"></div>
@@ -86,13 +86,13 @@
 
             <!-- Search Mode -->
             <div class="tab-content" id="tab-search">
-                <form id="search-form" onsubmit="handleSearch(event)">
+                <form id="search-form" onsubmit="handleSearch(event); return false;">
                     <div class="search-box">
                         <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input type="text" id="search-input" placeholder="Type a food item (e.g., Rice, Coffee, Apple, Chicken, Chocolate)..." autocomplete="off">
-                        <button type="submit" class="primary-btn" id="search-submit-btn">
+                        <input type="text" id="search-input" placeholder="Type a food item (e.g., Rice, Coffee, Apple, Chicken, Chocolate)..." autocomplete="off" onkeydown="if(event.key==='Enter'){handleSearch(event);}">
+                        <button type="button" class="primary-btn" id="search-submit-btn" onclick="handleSearch(event)">
                             <span id="search-btn-text">Analyze</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </button>
@@ -102,14 +102,14 @@
                 <div class="popular-chips">
                     <span class="chips-label" id="popular-label">Popular:</span>
                     <div class="chips-list" id="chips-container">
-                        <button class="chip" onclick="searchItem('rice')">🌾 Rice</button>
-                        <button class="chip" onclick="searchItem('coffee')">☕ Coffee</button>
-                        <button class="chip" onclick="searchItem('apple')">🍎 Apple</button>
-                        <button class="chip" onclick="searchItem('chocolate')">🍫 Chocolate</button>
-                        <button class="chip" onclick="searchItem('beef')">🥩 Beef</button>
-                        <button class="chip" onclick="searchItem('banana')">🍌 Banana</button>
-                        <button class="chip" onclick="searchItem('milk')">🥛 Milk</button>
-                        <button class="chip" onclick="searchItem('wheat')">🍞 Wheat</button>
+                        <button class="chip" onclick="selectChip('rice')">🌾 Rice</button>
+                        <button class="chip" onclick="selectChip('coffee')">☕ Coffee</button>
+                        <button class="chip" onclick="selectChip('apple')">🍎 Apple</button>
+                        <button class="chip" onclick="selectChip('chocolate')">🍫 Chocolate</button>
+                        <button class="chip" onclick="selectChip('beef')">🥩 Beef</button>
+                        <button class="chip" onclick="selectChip('banana')">🍌 Banana</button>
+                        <button class="chip" onclick="selectChip('milk')">🥛 Milk</button>
+                        <button class="chip" onclick="selectChip('wheat')">🍞 Wheat</button>
                     </div>
                 </div>
             </div>
@@ -164,6 +164,7 @@
                 <div class="result-title-group">
                     <span class="result-tag" id="result-category">Product Footprint</span>
                     <h2 class="result-item-name" id="res-item-name">Rice</h2>
+                    <p class="result-description" id="res-description" style="margin-top:0.4rem; color:var(--text-muted); font-size:0.9rem;"></p>
                 </div>
                 <div class="severity-badge severity-high" id="res-severity">
                     <span class="severity-dot"></span>
@@ -256,6 +257,6 @@
         <p class="footer-sub">Standardized using Water Footprint Network (WFN) & ISO 14046 methodologies</p>
     </footer>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=1.0.2"></script>
 </body>
 </html>

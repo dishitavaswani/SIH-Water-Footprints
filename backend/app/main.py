@@ -42,12 +42,19 @@ app.include_router(api_router)
 # Mount Static Frontend
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 if STATIC_DIR.exists():
-    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+    class NoCacheStaticFiles(StaticFiles):
+        def is_not_modified(self, response_headers, request_headers) -> bool:
+            return False
+
+    app.mount("/static", NoCacheStaticFiles(directory=str(STATIC_DIR)), name="static")
 
     @app.get("/", include_in_schema=False)
     async def serve_index():
-        """Serve the interactive web frontend."""
-        return FileResponse(str(STATIC_DIR / "index.html"))
+        """Serve the interactive web frontend with no-cache headers."""
+        return FileResponse(
+            str(STATIC_DIR / "index.html"),
+            headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
+        )
 
 
 if __name__ == "__main__":
