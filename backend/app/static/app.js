@@ -5,6 +5,37 @@ let selectedFile = null;
 
 const i18n = {
     en: {
+        mapTitle: 'Crop Suitability & Water Stress Map',
+        mapSubtitle: 'Explore where crops thrive — and where water, soil and climate constraints create agricultural risk.',
+        selectCrop: 'Select Crop:',
+        layer: 'Layer:',
+        cropSuitability: '🌾 Crop Suitability',
+        waterStress: '💧 Water Stress',
+        compareCrop: '⚔️ Compare Crop',
+        mapOverviewTitle: 'India Regional Suitability Overview',
+        highlySuitable: '🟢 Highly Suitable',
+        moderatelySuitable: '🔵 Moderately Suitable',
+        marginalRisky: '🟠 Marginal / Risky',
+        unsuitableHighStress: '🔴 Unsuitable / High Stress',
+        lowWaterStress: '🟢 Low Water Stress',
+        moderateWaterStress: '🔵 Moderate Water Stress',
+        highWaterStress: '🟠 High Water Stress',
+        severeWaterStress: '🔴 Severe Water Stress',
+        waterAvailability: 'Water Availability',
+        rainfallSuitability: 'Rainfall Suitability',
+        temperatureSuitability: 'Temperature Suitability',
+        soilSuitability: 'Soil Suitability',
+        irrigationDependency: 'Irrigation Dependency',
+        valHigh: 'High',
+        valModerate: 'Moderate',
+        valLow: 'Low',
+        whyCropRisky: '❓ Why is this crop risky / suitable here?',
+        potentialRegionalImpact: '🌊 Potential Regional Impact',
+        potentialCropImpact: '🌾 Potential Crop Impact',
+        betterSuitedAlternatives: '🌱 Better-Suited Alternatives',
+        selectRegionEmptyTitle: 'Select a Region on the Map',
+        selectRegionEmptySub: 'Click on any Indian state to inspect crop suitability, water availability, sub-metrics, and risk analysis.',
+        catalogAccordionLabel: 'View Standardized Footprint Database Catalog (41 Items)',
         brand: 'AquaFootprint',
         heroBadge: '💧 Sustainable Water Intelligence',
         heroHeading: 'Discover the Hidden <span class="gradient-text">Water Footprint</span> of Your Food',
@@ -32,6 +63,37 @@ const i18n = {
         notFoundDesc: 'Could not find water footprint data for this item.',
     },
     hi: {
+        mapTitle: 'फ़सल उपयुक्तता एवं जल तनाव मानचित्र',
+        mapSubtitle: 'जानें कहाँ फ़सलें पनपती हैं — और कहाँ जल, मिट्टी व जलवायु संबंधी जोखिम उत्पन्न होते हैं।',
+        selectCrop: 'फ़सल चुनें:',
+        layer: 'मानचित्र परत:',
+        cropSuitability: '🌾 फ़सल उपयुक्तता',
+        waterStress: '💧 जल तनाव',
+        compareCrop: '⚔️ तुलना करें',
+        mapOverviewTitle: 'भारत क्षेत्रीय उपयुक्तता विवरण',
+        highlySuitable: '🟢 अत्यधिक उपयुक्त',
+        moderatelySuitable: '🔵 मध्यम उपयुक्त',
+        marginalRisky: '🟠 सीमांत / जोखिमपूर्ण',
+        unsuitableHighStress: '🔴 अनुपयुक्त / अत्यधिक जल तनाव',
+        lowWaterStress: '🟢 कम जल तनाव',
+        moderateWaterStress: '🔵 मध्यम जल तनाव',
+        highWaterStress: '🟠 उच्च जल तनाव',
+        severeWaterStress: '🔴 गंभीर जल तनाव',
+        waterAvailability: 'जल उपलब्धता',
+        rainfallSuitability: 'वर्षा उपयुक्तता',
+        temperatureSuitability: 'तापमान उपयुक्तता',
+        soilSuitability: 'मृदा उपयुक्तता',
+        irrigationDependency: 'सिंचाई निर्भरता',
+        valHigh: 'उच्च',
+        valModerate: 'मध्यम',
+        valLow: 'निम्न',
+        whyCropRisky: '❓ यह फ़सल यहाँ जोखिमपूर्ण / उपयुक्त क्यों है?',
+        potentialRegionalImpact: '🌊 संभावित क्षेत्रीय प्रभाव',
+        potentialCropImpact: '🌾 संभावित फ़सल प्रभाव',
+        betterSuitedAlternatives: '🌱 अधिक उपयुक्त विकल्प',
+        selectRegionEmptyTitle: 'मानचित्र पर कोई राज्य चुनें',
+        selectRegionEmptySub: 'किसी भी भारतीय राज्य पर क्लिक करके फ़सल उपयुक्तता और जल तनाव का विवरण देखें।',
+        catalogAccordionLabel: 'मानकीकृत जल पदचिह्न डेटाबेस सूची (41 उत्पाद)',
         brand: 'जल पदचिह्न ट्रैकर',
         heroBadge: '💧 जल स्थिरता एवं विश्लेषण',
         heroHeading: 'अपने भोजन का छिपा हुआ <span class="gradient-text">जल पदचिह्न</span> जानें',
@@ -59,6 +121,37 @@ const i18n = {
         notFoundDesc: 'इस खाद्य वस्तु के लिए डेटाबेस में कोई रिकॉर्ड नहीं मिला।',
     },
     mr: {
+        mapTitle: 'पिक अनुकूलता आणि जल ताण नकाशा',
+        mapSubtitle: 'पिके कुठे उत्तम येतात — आणि कुठे पाणी, माती व हवामानाचे धोके आहेत ते शोधा.',
+        selectCrop: 'पिक निवडा:',
+        layer: 'नकाशा थर:',
+        cropSuitability: '🌾 पिक अनुकूलता',
+        waterStress: '💧 जल ताण',
+        compareCrop: '⚔️ तुलना करा',
+        mapOverviewTitle: 'भारत प्रादेशिक अनुकूलता तपशील',
+        highlySuitable: '🟢 अत्यंत अनुकूल',
+        moderatelySuitable: '🔵 मध्यम अनुकूल',
+        marginalRisky: '🟠 मध्यम / धोकादायक',
+        unsuitableHighStress: '🔴 अयोग्य / तीव्र जल ताण',
+        lowWaterStress: '🟢 कमी जल ताण',
+        moderateWaterStress: '🔵 मध्यम जल ताण',
+        highWaterStress: '🟠 जास्त जल ताण',
+        severeWaterStress: '🔴 तीव्र जल ताण',
+        waterAvailability: 'पाण्याची उपलब्धता',
+        rainfallSuitability: 'पावसाची अनुकूलता',
+        temperatureSuitability: 'तापमान अनुकूलता',
+        soilSuitability: 'मातीची अनुकूलता',
+        irrigationDependency: 'सिंचनावर अवलंबित्व',
+        valHigh: 'जास्त',
+        valModerate: 'मध्यम',
+        valLow: 'कमी',
+        whyCropRisky: '❓ हे पिक येथे धोक्याचे / योग्य का आहे?',
+        potentialRegionalImpact: '🌊 संभाव्य प्रादेशिक परिणाम',
+        potentialCropImpact: '🌾 संभाव्य पिकावरील परिणाम',
+        betterSuitedAlternatives: '🌱 अधिक योग्य पर्याय',
+        selectRegionEmptyTitle: 'नकाशावरील राज्य निवडा',
+        selectRegionEmptySub: 'कोणत्याही भारतीय राज्यावर क्लिक करून पिक अनुकूलता व जल ताण विश्लेषण पहा.',
+        catalogAccordionLabel: 'मानकीकृत डेटाबेस सूची (41 उत्पादने)',
         brand: 'पाण्याचा ठसा ट्रॅकर',
         heroBadge: '💧 जल संवर्धन आणि विश्लेषण',
         heroHeading: 'तुमच्या अन्नाचा लपलेला <span class="gradient-text">पाण्याचा ठसा</span> शोधा',
@@ -86,6 +179,37 @@ const i18n = {
         notFoundDesc: 'या घटकासाठी डेटाबेसमध्ये नोंद आढळली नाही.',
     },
     gu: {
+        mapTitle: 'પાક અનુકૂળતા અને જળ તણાવ નકશો',
+        mapSubtitle: 'પાક ક્યાં ઉત્તમ થાય છે — અને ક્યાં પાણી, માટી અને આબોહવાના જોખમો છે તે શોધો.',
+        selectCrop: 'પાક પસંદ કરો:',
+        layer: 'નકશા સ્તર:',
+        cropSuitability: '🌾 પાક અનુકૂળતા',
+        waterStress: '💧 જળ તણાવ',
+        compareCrop: '⚔️ સરખામણી કરો',
+        mapOverviewTitle: 'ભારત પ્રાદેશિક અનુકૂળતા વિગત',
+        highlySuitable: '🟢 અત્યંત અનુકૂળ',
+        moderatelySuitable: '🔵 મધ્યમ અનુકૂળ',
+        marginalRisky: '🟠 સીમાંત / જોખમી',
+        unsuitableHighStress: '🔴 અયોગ્ય / ઉચ્ચ જળ તણાવ',
+        lowWaterStress: '🟢 ઓછું જળ તણાવ',
+        moderateWaterStress: '🔵 મધ્યમ જળ તણાવ',
+        highWaterStress: '🟠 ઉચ્ચ જળ તણાવ',
+        severeWaterStress: '🔴 ગંભીર જળ તણાવ',
+        waterAvailability: 'પાણીની ઉપલબ્ધતા',
+        rainfallSuitability: 'વરસાદની અનુકૂળતા',
+        temperatureSuitability: 'તાપમાનની અનુકૂળતા',
+        soilSuitability: 'જમીનની અનુકૂળતા',
+        irrigationDependency: 'સિંચાઈ પર નિર્ભરતા',
+        valHigh: 'ઉચ્ચ',
+        valModerate: 'મધ્યમ',
+        valLow: 'ઓછું',
+        whyCropRisky: '❓ આ પાક અહીં જોખમી / યોગ્ય શા માટે છે?',
+        potentialRegionalImpact: '🌊 સંભવિત પ્રાદેશિક અસર',
+        potentialCropImpact: '🌾 સંભવિત પાક અસર',
+        betterSuitedAlternatives: '🌱 વધુ અનુકૂળ વિકલ્પો',
+        selectRegionEmptyTitle: 'નકશા પર રાજ્ય પસંદ કરો',
+        selectRegionEmptySub: 'કોઈપણ ભારતીય રાજ્ય પર ક્લિક કરીને વિગતવાર વિશ્લેષણ જુઓ.',
+        catalogAccordionLabel: 'ડેટાબેઝ યાદી (41 વસ્તુઓ)',
         brand: 'વોટર ફૂટપ્રિન્ટ ટ્રેકર',
         heroBadge: '💧 જળ સંરક્ષણ અને બુદ્ધિમત્તા',
         heroHeading: 'તમારા ખોરાકનો છુપાયેલ <span class="gradient-text">વોટર ફૂટપ્રિન્ટ</span> શોધો',
@@ -113,6 +237,37 @@ const i18n = {
         notFoundDesc: 'આ વસ્તુ માટે ડેટાબેઝમાં કોઈ રેકોર્ડ મળ્યો નથી.',
     },
     bn: {
+        mapTitle: 'ফসল উপযোগিতা ও পানি মানসিক চাপ মানচিত্র',
+        mapSubtitle: 'কোথায় ফসল ভালো হয় — এবং কোথায় পানি, মাটি ও জলবায়ু ঝুঁকি রয়েছে তা জানুন।',
+        selectCrop: 'ফসল নির্বাচন করুন:',
+        layer: 'মানচিত্র স্তর:',
+        cropSuitability: '🌾 ফসল উপযোগিতা',
+        waterStress: '💧 পানি চাপ',
+        compareCrop: '⚔️ তুলনা করুন',
+        mapOverviewTitle: 'ভারত আঞ্চলিক উপযোগিতা বিবরণ',
+        highlySuitable: '🟢 অত্যন্ত উপযুক্ত',
+        moderatelySuitable: '🔵 মাঝারি উপযুক্ত',
+        marginalRisky: '🟠 সীমান্তবর্তী / ঝুঁকিপূর্ণ',
+        unsuitableHighStress: '🔴 অনুপযুক্ত / তীব্র পানি চাপ',
+        lowWaterStress: '🟢 কম পানি চাপ',
+        moderateWaterStress: '🔵 মাঝারি পানি চাপ',
+        highWaterStress: '🟠 উচ্চ পানি চাপ',
+        severeWaterStress: '🔴 তীব্র পানি চাপ',
+        waterAvailability: 'পানির প্রাপ্যতা',
+        rainfallSuitability: 'বৃষ্টিপাত উপযোগিতা',
+        temperatureSuitability: 'তাপমাত্রা উপযোগিতা',
+        soilSuitability: 'মাটি উপযোগিতা',
+        irrigationDependency: 'সেচ নির্ভরতা',
+        valHigh: 'উচ্চ',
+        valModerate: 'মাঝারি',
+        valLow: 'কম',
+        whyCropRisky: '❓ কেন এই ফসল এখানে ঝুঁকিপূর্ণ / উপযুক্ত?',
+        potentialRegionalImpact: '🌊 সম্ভাব্য আঞ্চলিক প্রভাব',
+        potentialCropImpact: '🌾 সম্ভাব্য ফসল প্রভাব',
+        betterSuitedAlternatives: '🌱 আরও উপযুক্ত বিকল্প',
+        selectRegionEmptyTitle: 'মানচিত্রে একটি রাজ্য নির্বাচন করুন',
+        selectRegionEmptySub: 'যেকোনো ভারতীয় রাজ্যে ক্লিক করে বিস্তারিত বিশ্লেষণ দেখুন।',
+        catalogAccordionLabel: 'ডাটাবেজ ক্যাটালগ (৪১টি পণ্য)',
         brand: 'পানির পদচিহ্ন ট্র্যাকার',
         heroBadge: '💧 টেকসই পানি বুদ্ধিমত্তা',
         heroHeading: 'আপনার খাদ্যের লুকানো <span class="gradient-text">পানির পদচিহ্ন</span> জানুন',
@@ -140,6 +295,37 @@ const i18n = {
         notFoundDesc: 'এই খাদ্যদ্রব্যের জন্য কোনো তথ্য পাওয়া যায়নি।',
     },
     ta: {
+        mapTitle: 'பயிர் பொருத்தம் மற்றும் நீர் அழுத்த வரைபடம்',
+        mapSubtitle: 'பயிர்கள் எங்கு செழித்து வளர்கின்றன — மற்றும் நீர், மண் மற்றும் காலநிலை அபாயங்கள் எங்கு உள்ளன என்பதை ஆராயுங்கள்.',
+        selectCrop: 'பயிரைத் தேர்ந்தெடுக்கவும்:',
+        layer: 'வரைபட அடுக்கு:',
+        cropSuitability: '🌾 பயிர் பொருத்தம்',
+        waterStress: '💧 நீர் அழுத்தம்',
+        compareCrop: '⚔️ ஒப்பிடுக',
+        mapOverviewTitle: 'இந்திய பிராந்திய பொருத்தம் மேலோட்டம்',
+        highlySuitable: '🟢 மிகவும் ஏற்றது',
+        moderatelySuitable: '🔵 மிதமான ஏற்றது',
+        marginalRisky: '🟠 எல்லைக்குட்பட்ட / ஆபத்தானது',
+        unsuitableHighStress: '🔴 பொருத்தமற்றது / அதிக நீர் அழுத்தம்',
+        lowWaterStress: '🟢 குறைந்த நீர் அழுத்தம்',
+        moderateWaterStress: '🔵 மிதமான நீர் அழுத்தம்',
+        highWaterStress: '🟠 அதிக நீர் அழுத்தம்',
+        severeWaterStress: '🔴 கடுமையான நீர் அழுத்தம்',
+        waterAvailability: 'நீர் கிடைக்கும் தன்மை',
+        rainfallSuitability: 'மழைப்பொழிவு பொருத்தம்',
+        temperatureSuitability: 'வெப்பநிலை பொருத்தம்',
+        soilSuitability: 'மண் பொருத்தம்',
+        irrigationDependency: 'பாசன சார்பு',
+        valHigh: 'அதிகம்',
+        valModerate: 'மிதமான',
+        valLow: 'குறைவு',
+        whyCropRisky: '❓ இந்தப் பயிர் இங்கு ஆபத்தானது / ஏற்றது ஏன்?',
+        potentialRegionalImpact: '🌊 சாத்தியமான பிராந்திய தாக்கம்',
+        potentialCropImpact: '🌾 சாத்தியமான பயிர் தாக்கம்',
+        betterSuitedAlternatives: '🌱 சிறந்த மாற்றுப் பயிர்கள்',
+        selectRegionEmptyTitle: 'வரைபடத்தில் ஒரு மாநிலத்தைத் தேர்ந்தெடுக்கவும்',
+        selectRegionEmptySub: 'விவரங்களை ஆராய எந்தவொரு இந்திய மாநிலத்தையும் கிளிக் செய்யவும்.',
+        catalogAccordionLabel: 'தரவுத்தள பட்டியல் (41 பொருட்கள்)',
         brand: 'நீர் தடம் கண்காணிப்பாளர்',
         heroBadge: '💧 நிலையான நீர் நுண்ணறிவு',
         heroHeading: 'உங்கள் உணவின் மறைக்கப்பட்ட <span class="gradient-text">நீர் தடத்தை</span> கண்டறியவும்',
@@ -167,6 +353,37 @@ const i18n = {
         notFoundDesc: 'இந்த உணவுப் பொருளுக்கான தரவு எதுவும் கிடைக்கவில்லை.',
     },
     te: {
+        mapTitle: 'పంట అనుకూలత & నీటి ఒత్తిడి మ్యాప్',
+        mapSubtitle: 'పంటలు ఎక్కడ బాగా పండుతాయో — మరియు నీరు, నేల, వాతావరణ పరిమితులు ఎక్కడ ప్రమాదాన్ని కలిగిస్తాయో తెలుసుకోండి.',
+        selectCrop: 'పంటను ఎంచుకోండి:',
+        layer: 'మ్యాప్ లేయర్:',
+        cropSuitability: '🌾 పంట అనుకూలత',
+        waterStress: '💧 నీటి ఒత్తిడి',
+        compareCrop: '⚔️ పోల్చండి',
+        mapOverviewTitle: 'భారత ప్రాంతీయ అనుకూలత వివరాలు',
+        highlySuitable: '🟢 అత్యంత అనుకూలం',
+        moderatelySuitable: '🔵 మధ్యస్థ అనుకూలం',
+        marginalRisky: '🟠 సరిహద్దు / ప్రమాదకరం',
+        unsuitableHighStress: '🔴 అనుకూలం కాదు / అధిక నీటి ఒత్తిడి',
+        lowWaterStress: '🟢 తక్కువ నీటి ఒత్తిడి',
+        moderateWaterStress: '🔵 మధ్యస్థ నీటి ఒత్తిడి',
+        highWaterStress: '🟠 అధిక నీటి ఒత్తిడి',
+        severeWaterStress: '🔴 తీవ్రమైన నీటి ఒత్తిడి',
+        waterAvailability: 'నీటి లభ్యత',
+        rainfallSuitability: 'వర్షపాతం అనుకూలత',
+        temperatureSuitability: 'ఉష్ణోగ్రత అనుకూలత',
+        soilSuitability: 'నేల అనుకూలత',
+        irrigationDependency: 'సాగునీటి ఆధారపడటం',
+        valHigh: 'అధికం',
+        valModerate: 'మధ్యస్థం',
+        valLow: 'తక్కువ',
+        whyCropRisky: '❓ ఈ పంట ఇక్కడ ఎందుకు ప్రమాదకరం / అనుకూలం?',
+        potentialRegionalImpact: '🌊 సంభావ్య ప్రాంతీయ ప్రభావం',
+        potentialCropImpact: '🌾 సంభావ్య పంట ప్రభావం',
+        betterSuitedAlternatives: '🌱 మెరుగైన ప్రత్యామ్నాయాలు',
+        selectRegionEmptyTitle: 'మ్యాప్‌లో ఒక రాష్ట్రాన్ని ఎంచుకోండి',
+        selectRegionEmptySub: 'వివరాలను చూడటానికి ఏదైనా భారతీయ రాష్ట్రంపై క్లిక్ చేయండి.',
+        catalogAccordionLabel: 'డేటాబేస్ జాబితా (41 అంశాలు)',
         brand: 'నీటి పాదముద్ర ట్రాకర్',
         heroBadge: '💧 స్థిరమైన నీటి మేధస్సు',
         heroHeading: 'మీ ఆహారంలో దాగి ఉన్న <span class="gradient-text">నీటి పాదముద్రను</span> కనుగొనండి',
@@ -194,6 +411,37 @@ const i18n = {
         notFoundDesc: 'ఈ వస్తువుకు సంబంధించిన సమాచారం అందుబాటులో లేదు.',
     },
     kn: {
+        mapTitle: 'ಬೆಳೆ ಸೂಕ್ತತೆ ಮತ್ತು ನೀರಿನ ಒತ್ತಡದ ನಕ್ಷೆ',
+        mapSubtitle: 'ಬೆಳೆಗಳು ಎಲ್ಲಿ ಚೆನ್ನಾಗಿ ಬೆಳೆಯುತ್ತವೆ — ಮತ್ತು ನೀರು, ಮಣ್ಣು ಮತ್ತು ಹವಾಮಾನ ಅಪಾಯಗಳು ಎಲ್ಲಿವೆ ಎಂಬುದನ್ನು ತಿಳಿಯಿರಿ.',
+        selectCrop: 'ಬೆಳೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ:',
+        layer: 'ನಕ್ಷೆಯ ಪದರ:',
+        cropSuitability: '🌾 ಬೆಳೆ ಸೂಕ್ತತೆ',
+        waterStress: '💧 ನೀರಿನ ಒತ್ತಡ',
+        compareCrop: '⚔️ ಹೋಲಿಕೆ ಮಾಡಿ',
+        mapOverviewTitle: 'ಭಾರತ ಪ್ರಾದೇಶಿಕ ಸೂಕ್ತತೆಯ ವಿವರ',
+        highlySuitable: '🟢 ಅತ್ಯಂತ ಸೂಕ್ತ',
+        moderatelySuitable: '🔵 ಮಧ್ಯಮ ಸೂಕ್ತ',
+        marginalRisky: '🟠 ಗಡಿರೇಖೆ / ಅಪಾಯಕಾರಿ',
+        unsuitableHighStress: '🔴 ಅಸಮಂಜಸ / ಅಧಿಕ ನೀರಿನ ಒತ್ತಡ',
+        lowWaterStress: '🟢 ಕಡಿಮೆ ನೀರಿನ ಒತ್ತಡ',
+        moderateWaterStress: '🔵 ಮಧ್ಯಮ ನೀರಿನ ಒತ್ತಡ',
+        highWaterStress: '🟠 ಅಧಿಕ ನೀರಿನ ಒತ್ತಡ',
+        severeWaterStress: '🔴 ತೀವ್ರ ನೀರಿನ ಒತ್ತಡ',
+        waterAvailability: 'ನೀರಿನ ಲಭ್ಯತೆ',
+        rainfallSuitability: 'ಮಳೆ ಸೂಕ್ತತೆ',
+        temperatureSuitability: 'ತಾಪಮಾನ ಸೂಕ್ತತೆ',
+        soilSuitability: 'ಮಣ್ಣಿನ ಸೂಕ್ತತೆ',
+        irrigationDependency: 'ನೀರಾವರಿ ಅವಲಂಬನೆ',
+        valHigh: 'ಹೆಚ್ಚು',
+        valModerate: 'ಮಧ್ಯಮ',
+        valLow: 'ಕಡಿಮೆ',
+        whyCropRisky: '❓ ಈ ಬೆಳೆ ಇಲ್ಲೇಕೆ ಅಪಾಯಕಾರಿ / ಸೂಕ್ತ?',
+        potentialRegionalImpact: '🌊 ಸಂಭಾವ್ಯ ಪ್ರಾದೇಶಿಕ ಪರಿಣಾಮ',
+        potentialCropImpact: '🌾 ಸಂಭಾವ್ಯ ಬೆಳೆ ಪರಿಣಾಮ',
+        betterSuitedAlternatives: '🌱 ಉತ್ತಮ ಪರ್ಯಾಯ ಬೆಳೆಗಳು',
+        selectRegionEmptyTitle: 'ನಕ್ಷೆಯಲ್ಲಿ ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+        selectRegionEmptySub: 'ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಲು ಯಾವುದೇ ಭಾರತೀಯ ರಾಜ್ಯವನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.',
+        catalogAccordionLabel: 'ಡೇಟಾಬೇಸ್ ಪಟ್ಟಿ (41 ಐಟಂಗಳು)',
         brand: 'ನೀರಿನ ಹೆಜ್ಜೆಗುರುತು ಟ್ರ್ಯಾಕರ್',
         heroBadge: '💧 ಸುಸ್ಥಿರ ನೀರಿನ ಬುದ್ಧಿಮತ್ತೆ',
         heroHeading: 'ನಿಮ್ಮ ಆಹಾರದ ಗುಪ್ತ <span class="gradient-text">ನೀರಿನ ಹೆಜ್ಜೆಗುರುತನ್ನು</span> ತಿಳಿಯಿರಿ',
@@ -221,6 +469,37 @@ const i18n = {
         notFoundDesc: 'ಈ ಆಹಾರ ಪದಾರ್ಥಕ್ಕೆ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ.',
     },
     ml: {
+        mapTitle: 'വിള അനുയോജ്യതയും ജല സമ്മർദ്ദ ഭൂപടവും',
+        mapSubtitle: 'വിളകൾ എവിടെ നന്നായി വളരുന്നു — എവിടെ വെള്ളം, മണ്ണ്, കാലാവസ്ഥാ അപകടസാധ്യതകൾ നിലനിൽക്കുന്നുവെന്ന് കണ്ടെത്തുക.',
+        selectCrop: 'വിള തിരഞ്ഞെടുക്കുക:',
+        layer: 'ഭൂപട പാളി:',
+        cropSuitability: '🌾 വിള അനുയോജ്യത',
+        waterStress: '💧 ജല സമ്മർദ്ദം',
+        compareCrop: '⚔️ താരതമ്യം ചെയ്യുക',
+        mapOverviewTitle: 'ഇന്ത്യൻ പ്രാദേശിക അനുയോജ്യതാ അവലോകനം',
+        highlySuitable: '🟢 വളരെ അനുയോജ്യം',
+        moderatelySuitable: '🔵 മിതമായ അനുയോജ്യം',
+        marginalRisky: '🟠 അരികിലെ / അപകടസാധ്യതയുള്ളത്',
+        unsuitableHighStress: '🔴 അനുയോജ്യമല്ല / ഉയർന്ന ജല സമ്മർദ്ദം',
+        lowWaterStress: '🟢 കുറഞ്ഞ ജല സമ്മർദ്ദം',
+        moderateWaterStress: '🔵 മിതമായ ജല സമ്മർദ്ദം',
+        highWaterStress: '🟠 ഉയർന്ന ജല സമ്മർദ്ദം',
+        severeWaterStress: '🔴 രൂക്ഷമായ ജല സമ്മർദ്ദം',
+        waterAvailability: 'ജല ലഭ്യത',
+        rainfallSuitability: 'മഴ അനുയോജ്യത',
+        temperatureSuitability: 'താപനില അനുയോജ്യത',
+        soilSuitability: 'മണ്ണ് അനുയോജ്യത',
+        irrigationDependency: 'നനയ്ക്കൽ ആശ്രയത്വം',
+        valHigh: 'ഉയർന്നത്',
+        valModerate: 'മിതമായത്',
+        valLow: 'കുറഞ്ഞത്',
+        whyCropRisky: '❓ എന്തുകൊണ്ട് ഈ വിള ഇവിടെ അപകടകരമാണ് / അനുയോജ്യമാണ്?',
+        potentialRegionalImpact: '🌊 സാധ്യതയുള്ള പ്രാദേശിക പ്രഭാവം',
+        potentialCropImpact: '🌾 സാധ്യതയുള്ള വിള പ്രഭാവം',
+        betterSuitedAlternatives: '🌱 കൂടുതൽ അനുയോജ്യമായ ബദലുകൾ',
+        selectRegionEmptyTitle: 'ഭൂപടത്തിൽ ഒരു സംസ്ഥാനം തിരഞ്ഞെടുക്കുക',
+        selectRegionEmptySub: 'വിശദാംശങ്ങൾ കാണുന്നതിന് ഏതെങ്കിലും ഇന്ത്യൻ സംസ്ഥാനത്തിൽ ക്ലിക്ക് ചെയ്യുക.',
+        catalogAccordionLabel: 'ഡാറ്റാബേസ് പട്ടിക (41 ഇനങ്ങൾ)',
         brand: 'വാട്ടർ ഫുട്പ്രിന്റ് ട്രാക്കർ',
         heroBadge: '💧 സുസ്ഥിര ജല വിജ്ഞാനം',
         heroHeading: 'നിങ്ങളുടെ ഭക്ഷണത്തിലെ മറഞ്ഞിരിക്കുന്ന <span class="gradient-text">ജല കാൽപ്പാട്</span> കണ്ടെത്തുക',
@@ -248,6 +527,37 @@ const i18n = {
         notFoundDesc: 'ഈ ഭക്ഷണ സാധനത്തിന് ഡാറ്റ ലഭ്യമല്ല.',
     },
     pa: {
+        mapTitle: 'ਫ਼ਸਲ ਢੁਕਵੇਂਪਣ ਅਤੇ ਜਲ ਤਣਾਅ ਨਕਸ਼ਾ',
+        mapSubtitle: 'ਜਾਣੋ ਕਿ ਫ਼ਸਲਾਂ ਕਿੱਥੇ ਵਧੀਆ ਹੁੰਦੀਆਂ ਹਨ — ਅਤੇ ਕਿੱਥੇ ਪਾਣੀ, ਮਿੱਟੀ ਅਤੇ ਜਲਵਾਯੂ ਦੇ ਖ਼ਤਰੇ ਹਨ।',
+        selectCrop: 'ਫ਼ਸਲ ਚੁਣੋ:',
+        layer: 'ਨਕਸ਼ਾ ਪਰਤ:',
+        cropSuitability: '🌾 ਫ਼ਸਲ ਢੁਕਵਾਂਪਣ',
+        waterStress: '💧 ਜਲ ਤਣਾਅ',
+        compareCrop: '⚔️ ਤੁਲਨਾ ਕਰੋ',
+        mapOverviewTitle: 'ਭਾਰਤ ਖੇਤਰੀ ਢੁਕਵਾਂਪਣ ਵੇਰਵਾ',
+        highlySuitable: '🟢 ਬਹੁਤ ਢੁਕਵਾਂ',
+        moderatelySuitable: '🔵 ਦਰਮਿਆਨਾ ਢੁਕਵਾਂ',
+        marginalRisky: '🟠 ਸੀਮਾਂਤ / ਖ਼ਤਰਨਾਕ',
+        unsuitableHighStress: '🔴 ਅਣਢੁਕਵਾਂ / ਉੱਚ ਜਲ ਤਣਾਅ',
+        lowWaterStress: '🟢 ਘੱਟ ਜਲ ਤਣਾਅ',
+        moderateWaterStress: '🔵 ਦਰਮਿਆਨਾ ਜਲ ਤਣਾਅ',
+        highWaterStress: '🟠 ਉੱਚ ਜਲ ਤਣਾਅ',
+        severeWaterStress: '🔴 ਗੰਭੀਰ ਜਲ ਤਣਾਅ',
+        waterAvailability: 'ਪਾਣੀ ਦੀ ਉਪਲਬਧਤਾ',
+        rainfallSuitability: 'ਮੀਂਹ ਦੀ ਢੁਕਵਾਂਪਣ',
+        temperatureSuitability: 'ਤਾਪਮਾਨ ਦੀ ਢੁਕਵਾਂਪਣ',
+        soilSuitability: 'ਮਿੱਟੀ ਦੀ ਢੁਕਵਾਂਪਣ',
+        irrigationDependency: 'ਸਿੰਚਾਈ \'ਤੇ ਨਿਰਭਰਤਾ',
+        valHigh: 'ਉੱਚ',
+        valModerate: 'ਦਰਮਿਆਨਾ',
+        valLow: 'ਘੱਟ',
+        whyCropRisky: '❓ ਇਹ ਫ਼ਸਲ ਇੱਥੇ ਖ਼ਤਰਨਾਕ / ਢੁਕਵੀਂ ਕਿਉਂ ਹੈ?',
+        potentialRegionalImpact: '🌊 ਸੰਭਾਵੀ ਖੇਤਰੀ ਪ੍ਰਭਾਵ',
+        potentialCropImpact: '🌾 ਸੰਭਾਵੀ ਫ਼ਸਲ ਪ੍ਰਭਾਵ',
+        betterSuitedAlternatives: '🌱 ਬਿਹਤਰ ਢੁਕਵੇਂ ਬਦਲ',
+        selectRegionEmptyTitle: 'ਨਕਸ਼ੇ \'ਤੇ ਕੋਈ ਰਾਜ ਚੁਣੋ',
+        selectRegionEmptySub: 'ਕਿਸੇ ਵੀ ਭਾਰਤੀ ਰਾਜ \'ਤੇ ਕਲਿੱਕ ਕਰਕੇ ਵੇਰਵੇ ਦੇਖੋ।',
+        catalogAccordionLabel: 'ਡੇਟਾਬੇਸ ਸੂਚੀ (41 ਵਸਤਾਂ)',
         brand: 'ਵਾਟਰ ਫੁੱਟਪ੍ਰਿੰਟ ਟਰੈਕਰ',
         heroBadge: '💧 ਟਿਕਾਊ ਜਲ ਸੂਝ',
         heroHeading: 'ਆਪਣੇ ਭੋਜਨ ਦਾ ਲੁਕਿਆ ਹੋਇਆ <span class="gradient-text">ਜਲ ਪੈਰ-ਚਿੰਨ੍ਹ</span> ਜਾਣੋ',
@@ -376,7 +686,19 @@ function setLanguage(lang, shouldRefresh = true) {
     if (document.getElementById('desc-grey')) document.getElementById('desc-grey').innerHTML = t.descGrey;
     if (document.getElementById('lbl-tip-heading')) document.getElementById('lbl-tip-heading').innerHTML = t.tipHeading;
     if (document.getElementById('lbl-db-title')) document.getElementById('lbl-db-title').innerHTML = t.dbTitle;
-    if (document.getElementById('lbl-db-subtitle')) document.getElementById('lbl-db-subtitle').innerHTML = t.dbSubtitle;
+    
+    if (document.getElementById('lbl-map-title')) document.getElementById('lbl-map-title').innerHTML = t.mapTitle || 'Crop Suitability & Water Stress Map';
+    if (document.getElementById('lbl-map-subtitle')) document.getElementById('lbl-map-subtitle').innerHTML = t.mapSubtitle || '';
+    if (document.getElementById('lbl-crop-select-title')) document.getElementById('lbl-crop-select-title').innerHTML = t.selectCrop || 'Select Crop:';
+    if (document.getElementById('lbl-layer-select-title')) document.getElementById('lbl-layer-select-title').innerHTML = t.layer || 'Layer:';
+    if (document.getElementById('btn-layer-suitability')) document.getElementById('btn-layer-suitability').innerHTML = t.cropSuitability || '🌾 Crop Suitability';
+    if (document.getElementById('btn-layer-water-stress')) document.getElementById('btn-layer-water-stress').innerHTML = t.waterStress || '💧 Water Stress';
+    if (document.getElementById('btn-toggle-compare')) document.getElementById('btn-toggle-compare').innerHTML = t.compareCrop || '⚔️ Compare Crop';
+    if (document.getElementById('map-active-title')) document.getElementById('map-active-title').innerHTML = t.mapOverviewTitle || 'India Regional Suitability Overview';
+    if (document.getElementById('lbl-catalog-accordion')) document.getElementById('lbl-catalog-accordion').innerHTML = t.catalogAccordionLabel || 'View Standardized Footprint Database Catalog (41 Items)';
+
+    renderMapLegend();
+    if (activeStateId) selectRegionalState(activeStateId);
 
     if (shouldRefresh) {
         const currentQuery = document.getElementById('search-input').value.trim() || 'rice';
@@ -1011,19 +1333,21 @@ function renderMapLegend() {
     const legendEl = document.getElementById('map-legend');
     if (!legendEl) return;
 
+    const t = i18n[currentLang] || i18n.en;
+
     if (activeMapLayer === 'suitability') {
         legendEl.innerHTML = `
-            <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> 🟢 Highly Suitable</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#38bdf8"></span> 🔵 Moderately Suitable</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> 🟠 Marginal / Risky</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> 🔴 Unsuitable / High Stress</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> ${t.highlySuitable || '🟢 Highly Suitable'}</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#38bdf8"></span> ${t.moderatelySuitable || '🔵 Moderately Suitable'}</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> ${t.marginalRisky || '🟠 Marginal / Risky'}</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> ${t.unsuitableHighStress || '🔴 Unsuitable / High Stress'}</div>
         `;
     } else {
         legendEl.innerHTML = `
-            <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> 🟢 Low Water Stress</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#38bdf8"></span> 🔵 Moderate Water Stress</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span> 🟠 High Water Stress</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> 🔴 Severe Water Stress</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> ${t.lowWaterStress || '🟢 Low Water Stress'}</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#38bdf8"></span> ${t.moderateWaterStress || '🔵 Moderate Water Stress'}</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span> ${t.highWaterStress || '🟠 High Water Stress'}</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> ${t.severeWaterStress || '🔴 Severe Water Stress'}</div>
         `;
     }
 }
@@ -1038,7 +1362,7 @@ async function selectRegionalState(stateId) {
     if (contentBody) contentBody.classList.remove('hidden');
 
     try {
-        const res = await fetch(`/regional/detail?crop=${activeRegionalCrop}&state=${stateId}`);
+        const res = await fetch(`/regional/detail?crop=${activeRegionalCrop}&state=${stateId}&lang=${currentLang}`);
         if (res.ok) {
             const data = await res.json();
             renderRegionDetailPanel(data);
@@ -1049,6 +1373,8 @@ async function selectRegionalState(stateId) {
 }
 
 function renderRegionDetailPanel(data) {
+    const t = i18n[currentLang] || i18n.en;
+
     const stateNameEl = document.getElementById('detail-state-name');
     const cropTitleEl = document.getElementById('detail-crop-title');
     const suitPillEl = document.getElementById('detail-suitability-pill');
@@ -1066,16 +1392,26 @@ function renderRegionDetailPanel(data) {
     const betterAlts = document.getElementById('analysis-better-alts');
     const attribution = document.getElementById('detail-source-attribution');
 
+    const localizeVal = (val) => {
+        if (!val) return '';
+        const v = val.toString().trim().toLowerCase();
+        if (v === 'high') return t.valHigh || 'High';
+        if (v === 'moderate') return t.valModerate || 'Moderate';
+        if (v === 'low') return t.valLow || 'Low';
+        if (v === 'severe') return t.severeWaterStress || 'Severe';
+        return val;
+    };
+
     if (stateNameEl) stateNameEl.textContent = data.region.name;
     if (cropTitleEl) cropTitleEl.textContent = data.crop.name;
     if (suitPillEl) suitPillEl.textContent = data.suitability.category_label;
     if (wfChipEl) wfChipEl.textContent = `${data.crop.water_footprint_total.toLocaleString()} ${data.crop.unit}`;
 
-    if (mWater) mWater.textContent = data.sub_metrics.water_availability;
-    if (mRain) mRain.textContent = data.sub_metrics.rainfall_suitability;
-    if (mTemp) mTemp.textContent = data.sub_metrics.temperature_suitability;
-    if (mSoil) mSoil.textContent = data.sub_metrics.soil_suitability;
-    if (mIrrig) mIrrig.textContent = data.sub_metrics.irrigation_dependency;
+    if (mWater) mWater.textContent = localizeVal(data.sub_metrics.water_availability);
+    if (mRain) mRain.textContent = localizeVal(data.sub_metrics.rainfall_suitability);
+    if (mTemp) mTemp.textContent = localizeVal(data.sub_metrics.temperature_suitability);
+    if (mSoil) mSoil.textContent = localizeVal(data.sub_metrics.soil_suitability);
+    if (mIrrig) mIrrig.textContent = localizeVal(data.sub_metrics.irrigation_dependency);
 
     if (whyText) whyText.textContent = data.analysis.why_explanation;
     if (regImpact) regImpact.textContent = data.analysis.regional_impact;

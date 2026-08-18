@@ -111,11 +111,32 @@ def regional_map_data(
 def regional_detail(
     crop: str = Query("rice", description="Crop identifier"),
     state: str = Query("PB", description="State ID or state name"),
+    lang: str = Query("en", description="Target response language code"),
 ) -> Dict[str, Any]:
     """Returns complete suitability, sub-metrics, and risk analysis for a state and crop."""
+    canonical_lang = normalize_language_code(lang) or "en"
     detail = get_regional_detail(crop_id=crop, state_id=state)
     if not detail:
         raise HTTPException(status_code=404, detail=f"Regional suitability data not found for crop '{crop}' in state '{state}'")
+
+    if canonical_lang != "en":
+        try:
+            detail["crop"]["name"] = translate_text(detail["crop"]["name"], canonical_lang)
+            detail["region"]["name"] = translate_text(detail["region"]["name"], canonical_lang)
+            detail["suitability"]["category_label"] = translate_text(detail["suitability"]["category_label"], canonical_lang)
+
+            analysis = detail["analysis"]
+            if analysis.get("why_explanation"):
+                analysis["why_explanation"] = translate_text(analysis["why_explanation"], canonical_lang)
+            if analysis.get("regional_impact"):
+                analysis["regional_impact"] = translate_text(analysis["regional_impact"], canonical_lang)
+            if analysis.get("crop_impact"):
+                analysis["crop_impact"] = translate_text(analysis["crop_impact"], canonical_lang)
+            if analysis.get("better_suited_alternatives"):
+                analysis["better_suited_alternatives"] = translate_text(analysis["better_suited_alternatives"], canonical_lang)
+        except Exception:
+            pass
+
     return detail
 
 
