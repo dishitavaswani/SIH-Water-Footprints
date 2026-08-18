@@ -581,11 +581,123 @@ body {
 .severity-medium .severity-dot { background: #f59e0b; }
 
 .severity-high {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #f87171;
+    background: rgba(249, 115, 22, 0.15);
+    border: 1px solid rgba(249, 115, 22, 0.4);
+    color: #fb923c;
 }
-.severity-high .severity-dot { background: #ef4444; }
+.severity-high .severity-dot { background: #f97316; }
+
+.severity-moderate {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #38bdf8;
+}
+.severity-moderate .severity-dot { background: #38bdf8; }
+
+.severity-very-high {
+    background: rgba(225, 29, 72, 0.2);
+    border: 1px solid rgba(225, 29, 72, 0.5);
+    color: #f43f5e;
+}
+.severity-very-high .severity-dot { background: #f43f5e; }
+
+/* Water Impact Insights Cards */
+.insights-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.insight-card {
+    background: rgba(10, 15, 29, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.insight-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.insight-header h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.insight-text {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+
+.insight-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+}
+
+.comparison-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--primary-light);
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.alt-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alt-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #34d399;
+}
+
+.alt-text {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.savings-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-sm);
+}
+
+.savings-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #34d399;
+}
+
+.savings-val {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #34d399;
+}
 
 /* Metrics Grid */
 .metrics-grid {

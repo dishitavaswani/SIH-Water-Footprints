@@ -743,6 +743,45 @@ function renderResult(data) {
     const tipEl = document.getElementById('res-tip');
     if (tipEl) tipEl.textContent = data.tip || 'Choosing locally sourced produce significantly reduces overall water stress.';
 
+    // Water Impact Insights Rendering
+    const insights = data.insights || {};
+    const explanationEl = document.getElementById('res-explanation');
+    const compIconEl = document.getElementById('res-comp-icon');
+    const compTextEl = document.getElementById('res-comp-text');
+    const severityBadgeEl = document.getElementById('res-severity-badge');
+    const severityLabelEl = document.getElementById('res-severity-label');
+    const altNameEl = document.getElementById('res-alt-name');
+    const altTextEl = document.getElementById('res-alt-display-text');
+    const savingsBadgeEl = document.getElementById('res-savings-badge');
+    const savingsValEl = document.getElementById('res-savings-val');
+
+    if (explanationEl && insights.explanation) {
+        explanationEl.textContent = insights.explanation;
+    }
+
+    if (insights.comparison) {
+        if (compIconEl) compIconEl.textContent = insights.comparison.icon || '🛁';
+        if (compTextEl) compTextEl.textContent = insights.comparison.display_text || '';
+    }
+
+    if (insights.severity && severityBadgeEl) {
+        severityBadgeEl.className = `severity-badge ${insights.severity.badge_class || 'severity-high'}`;
+        if (severityLabelEl) severityLabelEl.textContent = insights.severity.label || 'High Water Impact';
+    }
+
+    if (insights.alternative) {
+        const alt = insights.alternative;
+        if (altNameEl) altNameEl.textContent = alt.name || 'Sustainable Produce';
+        if (altTextEl) altTextEl.textContent = alt.display_text || '';
+
+        if (alt.has_savings_percentage && alt.savings_percentage !== null) {
+            if (savingsBadgeEl) savingsBadgeEl.classList.remove('hidden');
+            if (savingsValEl) savingsValEl.textContent = `≈ ${alt.savings_percentage}%`;
+        } else {
+            if (savingsBadgeEl) savingsBadgeEl.classList.add('hidden');
+        }
+    }
+
     // Scroll smoothly to the result section
     if (resultCard) {
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

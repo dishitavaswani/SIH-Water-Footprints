@@ -18,6 +18,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from database.lookup import get_footprint_data, get_water_footprint, get_comparison, get_tip, get_connection
 from backend.app.services.translation_service import translate_text
+from backend.app.services.insights_service import generate_water_impact_insights
 from multilingual.registry import (
     get_supported_languages,
     get_supported_codes,
@@ -122,6 +123,16 @@ def get_footprint(
         if tip:
             tip = translate_text(tip, canonical_lang)
 
+    # Generate Water Impact Insights
+    insights = generate_water_impact_insights(
+        item_name=clean_item,
+        green_wf=green,
+        blue_wf=blue,
+        grey_wf=grey,
+        unit=data.get("unit", "litres/kg"),
+        lang=canonical_lang,
+    )
+
     return {
         "item": item_name,
         "item_name": item_name,
@@ -137,6 +148,7 @@ def get_footprint(
         "comparison": comparison,
         "tip": tip,
         "lang": canonical_lang,
+        "insights": insights,
     }
 
 
@@ -328,6 +340,16 @@ async def scan_image(
             if tip:
                 tip = translate_text(tip, canonical_lang)
 
+        # Generate Water Impact Insights
+        insights = generate_water_impact_insights(
+            item_name=recognized_label,
+            green_wf=green,
+            blue_wf=blue,
+            grey_wf=grey,
+            unit=unit,
+            lang=canonical_lang,
+        )
+
         return {
             "success": True,
             "item": label_display,
@@ -347,6 +369,7 @@ async def scan_image(
             "tip": tip,
             "lang": canonical_lang,
             "debug_info": debug_info,
+            "insights": insights,
             "item_details": {
                 "canonical_name": recognized_label,
                 "display_name": label_display,
