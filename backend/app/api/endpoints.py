@@ -19,6 +19,19 @@ if str(REPO_ROOT) not in sys.path:
 from database.lookup import get_footprint_data, get_water_footprint, get_comparison, get_tip, get_connection
 from backend.app.services.translation_service import translate_text
 from backend.app.services.insights_service import generate_water_impact_insights
+from database.regional_db import (
+    init_regional_db,
+    get_supported_regional_crops,
+    get_regional_map_data,
+    get_regional_detail,
+    compare_regional_crops,
+)
+
+# Ensure regional DB table is initialized
+try:
+    init_regional_db()
+except Exception:
+    pass
 from multilingual.registry import (
     get_supported_languages,
     get_supported_codes,
@@ -76,6 +89,44 @@ def list_items() -> Dict[str, Any]:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to query database items: {exc}",
         )
+
+
+@router.get("/regional/crops", tags=["Regional Agriculture"])
+def list_regional_crops() -> Dict[str, Any]:
+    """Returns list of crops with regional suitability data available."""
+    crops = get_supported_regional_crops()
+    return {"count": len(crops), "crops": crops}
+
+
+@router.get("/regional/map-data", tags=["Regional Agriculture"])
+def regional_map_data(
+    crop: str = Query("rice", description="Crop identifier"),
+    layer: str = Query("suitability", description="Layer type: suitability or water_stress"),
+) -> Dict[str, Any]:
+    """Returns state-wise suitability or water stress map colors and scores."""
+    return get_regional_map_data(crop_id=crop, layer=layer)
+
+
+@router.get("/regional/detail", tags=["Regional Agriculture"])
+def regional_detail(
+    crop: str = Query("rice", description="Crop identifier"),
+    state: str = Query("PB", description="State ID or state name"),
+) -> Dict[str, Any]:
+    """Returns complete suitability, sub-metrics, and risk analysis for a state and crop."""
+    detail = get_regional_detail(crop_id=crop, state_id=state)
+    if not detail:
+        raise HTTPException(status_code=404, detail=f"Regional suitability data not found for crop '{crop}' in state '{state}'")
+    return detail
+
+
+@router.get("/regional/compare", tags=["Regional Agriculture"])
+def regional_compare(
+    crop_a: str = Query("rice", description="First crop ID"),
+    crop_b: str = Query("jowar", description="Second crop ID"),
+    state: str = Query("PB", description="State ID or name"),
+) -> Dict[str, Any]:
+    """Side-by-side suitability and impact comparison between two crops in a state."""
+    return compare_regional_crops(crop_a=crop_a, crop_b=crop_b, state_id=state)
 
 
 @router.get("/footprint", tags=["Footprint"])

@@ -278,16 +278,151 @@
             </div>
         </section>
 
-        <!-- Database Explorer Grid -->
-        <section class="explorer-section">
-            <div class="section-head">
+        <!-- Crop Suitability & Water Stress Map Section -->
+        <section class="explorer-section" id="regional-map-section">
+            <div class="section-head map-header-head">
                 <div>
-                    <h3 class="section-title" id="lbl-db-title">Database Catalog (41 Standardized Items)</h3>
-                    <p class="section-subtitle" id="lbl-db-subtitle">Click any item to inspect its complete water footprint profile</p>
+                    <h3 class="section-title" id="lbl-map-title">Crop Suitability & Water Stress Map</h3>
+                    <p class="section-subtitle" id="lbl-map-subtitle">Explore where crops thrive — and where water, soil and climate constraints create agricultural risk.</p>
+                </div>
+
+                <!-- Map Toolbar Controls -->
+                <div class="map-toolbar">
+                    <div class="map-control-group">
+                        <label for="crop-selector" id="lbl-crop-select-title">Select Crop:</label>
+                        <select id="crop-selector" class="map-dropdown" onchange="handleCropChange()">
+                            <!-- Populated dynamically via JS -->
+                        </select>
+                    </div>
+
+                    <div class="map-control-group">
+                        <label id="lbl-layer-select-title">Layer:</label>
+                        <div class="toggle-buttons">
+                            <button class="layer-btn active" id="btn-layer-suitability" onclick="switchMapLayer('suitability')">🌾 Crop Suitability</button>
+                            <button class="layer-btn" id="btn-layer-water-stress" onclick="switchMapLayer('water_stress')">💧 Water Stress</button>
+                        </div>
+                    </div>
+
+                    <div class="map-control-group">
+                        <button class="compare-toggle-btn" id="btn-toggle-compare" onclick="toggleCompareMode()">⚔️ Compare Crop</button>
+                    </div>
                 </div>
             </div>
-            <div class="catalog-grid" id="catalog-grid">
-                <!-- Injected via JS -->
+
+            <!-- Comparison Bar (Hidden by default) -->
+            <div class="compare-bar hidden" id="compare-bar">
+                <span>Compare <strong id="compare-crop-a-label">Rice</strong> vs:</span>
+                <select id="compare-crop-b-selector" class="map-dropdown" onchange="updateComparison()">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+
+            <!-- Main Interactive Map Grid -->
+            <div class="map-layout-grid">
+                <!-- Left: Interactive Map Container -->
+                <div class="map-wrapper-card">
+                    <div class="map-card-header">
+                        <h4 class="map-card-title" id="map-active-title">India Regional Suitability Overview</h4>
+                        <span class="data-notice-badge" id="data-source-badge">Source: ICAR & CGWB National Agricultural Assessment Guidelines</span>
+                    </div>
+
+                    <!-- Interactive Map Container -->
+                    <div class="map-container" id="india-map-container">
+                        <!-- Rendered by JS -->
+                    </div>
+
+                    <!-- Map Legend -->
+                    <div class="map-legend" id="map-legend">
+                        <!-- Legend items rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Right / Bottom: Region Detail Panel -->
+                <div class="region-detail-card" id="region-detail-panel">
+                    <div class="detail-empty-state" id="detail-empty-state">
+                        <div class="empty-icon">🗺️</div>
+                        <h4>Select a Region on the Map</h4>
+                        <p>Click on any Indian state to inspect crop suitability, water availability, sub-metrics, and risk analysis.</p>
+                    </div>
+
+                    <div class="detail-content-body hidden" id="detail-content-body">
+                        <!-- Header -->
+                        <div class="detail-header-row">
+                            <div>
+                                <span class="detail-state-name" id="detail-state-name">Punjab</span>
+                                <h3 class="detail-crop-title" id="detail-crop-title">Rice</h3>
+                            </div>
+                            <div class="detail-badge-box">
+                                <span class="suitability-pill" id="detail-suitability-pill">🟢 Highly Suitable</span>
+                                <span class="wf-stat-chip" id="detail-wf-chip">1,600 L/kg</span>
+                            </div>
+                        </div>
+
+                        <!-- Sub-metrics Grid -->
+                        <div class="submetrics-grid">
+                            <div class="metric-box">
+                                <span class="metric-lbl">Water Availability</span>
+                                <span class="metric-val" id="m-water-avail">High</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-lbl">Rainfall Suitability</span>
+                                <span class="metric-val" id="m-rainfall">High</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-lbl">Temperature Suitability</span>
+                                <span class="metric-val" id="m-temperature">Moderate</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-lbl">Soil Suitability</span>
+                                <span class="metric-val" id="m-soil">High</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-lbl">Irrigation Dependency</span>
+                                <span class="metric-val" id="m-irrigation">Low</span>
+                            </div>
+                        </div>
+
+                        <!-- Risk Explanation ("Why?") -->
+                        <div class="analysis-block why-block">
+                            <h5>❓ Why is this crop risky / suitable here?</h5>
+                            <p id="analysis-why-text">High seasonal rainfall and alluvial river basins provide ideal conditions.</p>
+                        </div>
+
+                        <!-- Regional & Crop Impacts -->
+                        <div class="impacts-two-col">
+                            <div class="analysis-block">
+                                <h5>🌊 Potential Regional Impact</h5>
+                                <p id="analysis-regional-impact">Supports high biodiversity with low groundwater stress.</p>
+                            </div>
+                            <div class="analysis-block">
+                                <h5>🌾 Potential Crop Impact</h5>
+                                <p id="analysis-crop-impact">Optimal growth rates and high crop yield stability.</p>
+                            </div>
+                        </div>
+
+                        <!-- Better-suited Alternatives -->
+                        <div class="analysis-block alt-recommend-block">
+                            <h5>🌱 Better-Suited Alternatives</h5>
+                            <p id="analysis-better-alts">Jowar, Maize, Pulses</p>
+                        </div>
+
+                        <!-- Data Source Attribution -->
+                        <div class="data-attribution-footer">
+                            <span id="detail-source-attribution">Data Source: ICAR-NBSSLUP & CGWB Agro-Climatic Dataset (2024)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Catalog Accordion (Preserves 41-item Database Explorer) -->
+            <div class="catalog-accordion">
+                <button class="accordion-toggle-btn" onclick="toggleCatalogExplorer()">
+                    <span id="lbl-catalog-accordion">View Standardized Footprint Database Catalog (41 Items)</span>
+                    <span class="accordion-arrow" id="catalog-arrow">▼</span>
+                </button>
+                <div class="catalog-grid hidden" id="catalog-grid">
+                    <!-- Injected via JS -->
+                </div>
             </div>
         </section>
     </main>

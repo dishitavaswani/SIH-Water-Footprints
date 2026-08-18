@@ -282,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupSearchForm();
     setupDropzone();
     loadDatabaseCatalog();
+    initRegionalMap();
     checkBackendHealth();
 
     // Set initial language from storage or default
@@ -852,4 +853,275 @@ async function loadDatabaseCatalog() {
 function capitalize(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Regional Agriculture Map State
+let activeRegionalCrop = 'rice';
+let activeMapLayer = 'suitability';
+let activeStateId = null;
+let isCompareMode = false;
+let regionalCropsList = [];
+let regionalMapData = {};
+
+const INDIA_SVG_STATES = [
+    { id: "PB", name: "Punjab", d: "M 190 120 L 235 110 L 250 145 L 220 170 L 185 150 Z" },
+    { id: "HR", name: "Haryana", d: "M 220 170 L 250 145 L 270 175 L 240 200 L 210 185 Z" },
+    { id: "JK", name: "Jammu & Kashmir", d: "M 195 40 L 260 50 L 275 105 L 225 115 L 190 85 Z" },
+    { id: "RJ", name: "Rajasthan", d: "M 115 155 L 210 185 L 220 250 L 160 295 L 95 235 Z" },
+    { id: "GJ", name: "Gujarat", d: "M 75 245 L 155 285 L 140 350 L 55 335 L 45 280 Z" },
+    { id: "UP", "name": "Uttar Pradesh", d: "M 270 175 L 365 185 L 385 240 L 290 255 L 240 200 Z" },
+    { id: "BR", "name": "Bihar", d: "M 385 240 L 460 245 L 450 290 L 375 285 Z" },
+    { id: "WB", "name": "West Bengal", d: "M 460 245 L 490 250 L 480 330 L 450 290 Z" },
+    { id: "MP", "name": "Madhya Pradesh", d: "M 160 295 L 290 255 L 340 320 L 250 360 L 150 320 Z" },
+    { id: "MH", "name": "Maharashtra", d: "M 140 350 L 250 360 L 280 430 L 150 420 Z" },
+    { id: "KA", "name": "Karnataka", d: "M 160 430 L 240 440 L 220 515 L 170 495 Z" },
+    { id: "TN", "name": "Tamil Nadu", d: "M 220 515 L 275 505 L 265 575 L 210 565 Z" },
+    { id: "AP", "name": "Andhra Pradesh", d: "M 250 440 L 325 410 L 315 495 L 260 505 Z" },
+    { id: "TS", "name": "Telangana", d: "M 260 365 L 325 365 L 315 425 L 250 425 Z" },
+    { id: "KL", "name": "Kerala", d: "M 170 495 L 210 505 L 200 565 L 165 545 Z" },
+    { id: "OR", "name": "Odisha", d: "M 340 320 L 430 330 L 400 395 L 325 365 Z" },
+    { id: "AS", "name": "Assam", d: "M 495 215 L 565 220 L 555 260 L 490 250 Z" },
+];
+
+async function initRegionalMap() {
+    await loadRegionalCrops();
+    await fetchAndRenderMap();
+}
+
+async function loadRegionalCrops() {
+    try {
+        const res = await fetch('/regional/crops');
+        if (res.ok) {
+            const data = await res.json();
+            regionalCropsList = data.crops || [];
+            populateCropDropdowns();
+        }
+    } catch (err) {
+        console.error("Failed to load regional crops:", err);
+    }
+}
+
+function populateCropDropdowns() {
+    const selector = document.getElementById('crop-selector');
+    const compareSelector = document.getElementById('compare-crop-b-selector');
+    if (!selector) return;
+
+    selector.innerHTML = '';
+    if (compareSelector) compareSelector.innerHTML = '';
+
+    regionalCropsList.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.crop_id;
+        opt.textContent = `${c.crop_name} (${c.total_wf.toLocaleString()} ${c.unit})`;
+        if (c.crop_id === activeRegionalCrop) opt.selected = true;
+        selector.appendChild(opt);
+
+        if (compareSelector) {
+            const optB = document.createElement('option');
+            optB.value = c.crop_id;
+            optB.textContent = `${c.crop_name} (${c.total_wf.toLocaleString()} ${c.unit})`;
+            if (c.crop_id === 'jowar' || c.crop_id === 'wheat') optB.selected = true;
+            compareSelector.appendChild(optB);
+        }
+    });
+}
+
+async function handleCropChange() {
+    const selector = document.getElementById('crop-selector');
+    if (selector) activeRegionalCrop = selector.value;
+
+    const labelA = document.getElementById('compare-crop-a-label');
+    if (labelA) labelA.textContent = capitalize(activeRegionalCrop);
+
+    await fetchAndRenderMap();
+    if (activeStateId) selectRegionalState(activeStateId);
+}
+
+function switchMapLayer(layer) {
+    activeMapLayer = layer;
+    const btnSuit = document.getElementById('btn-layer-suitability');
+    const btnStress = document.getElementById('btn-layer-water-stress');
+
+    if (layer === 'suitability') {
+        if (btnSuit) btnSuit.classList.add('active');
+        if (btnStress) btnStress.classList.remove('active');
+    } else {
+        if (btnStress) btnStress.classList.add('active');
+        if (btnSuit) btnSuit.classList.remove('active');
+    }
+    fetchAndRenderMap();
+}
+
+async function fetchAndRenderMap() {
+    try {
+        const res = await fetch(`/regional/map-data?crop=${activeRegionalCrop}&layer=${activeMapLayer}`);
+        if (res.ok) {
+            const data = await res.json();
+            regionalMapData = data.states || {};
+            renderIndiaVectorSVG();
+            renderMapLegend();
+        }
+    } catch (err) {
+        console.error("Map fetch error:", err);
+    }
+}
+
+function renderIndiaVectorSVG() {
+    const container = document.getElementById('india-map-container');
+    if (!container) return;
+
+    let svgHtml = `<svg class="map-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">`;
+
+    INDIA_SVG_STATES.forEach(st => {
+        const stateInfo = regionalMapData[st.id] || { color: '#38bdf8', category: 'moderately_suitable' };
+        const isSelected = activeStateId === st.id;
+        const selClass = isSelected ? 'selected' : '';
+        const centroid = getCentroid(st.d);
+
+        svgHtml += `
+            <path id="state-path-${st.id}"
+                  class="state-path ${selClass}"
+                  d="${st.d}"
+                  fill="${stateInfo.color}"
+                  fill-opacity="0.85"
+                  onclick="selectRegionalState('${st.id}')">
+                <title>${st.name}: ${stateInfo.category || stateInfo.water_stress}</title>
+            </path>
+            <text x="${centroid.x}" y="${centroid.y}" font-size="11" fill="#ffffff" font-weight="800" text-anchor="middle" pointer-events="none">${st.id}</text>
+        `;
+    });
+
+    svgHtml += `</svg>`;
+    container.innerHTML = svgHtml;
+}
+
+function getCentroid(pathD) {
+    const matches = pathD.match(/(-?\d+(\.\d+)?)/g);
+    if (!matches || matches.length < 4) return { x: 300, y: 300 };
+    let sumX = 0, sumY = 0, count = 0;
+    for (let i = 0; i < matches.length - 1; i += 2) {
+        sumX += parseFloat(matches[i]);
+        sumY += parseFloat(matches[i+1]);
+        count++;
+    }
+    return { x: sumX / count, y: sumY / count };
+}
+
+function renderMapLegend() {
+    const legendEl = document.getElementById('map-legend');
+    if (!legendEl) return;
+
+    if (activeMapLayer === 'suitability') {
+        legendEl.innerHTML = `
+            <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> 🟢 Highly Suitable</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#38bdf8"></span> 🔵 Moderately Suitable</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> 🟠 Marginal / Risky</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> 🔴 Unsuitable / High Stress</div>
+        `;
+    } else {
+        legendEl.innerHTML = `
+            <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> 🟢 Low Water Stress</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#38bdf8"></span> 🔵 Moderate Water Stress</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span> 🟠 High Water Stress</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> 🔴 Severe Water Stress</div>
+        `;
+    }
+}
+
+async function selectRegionalState(stateId) {
+    activeStateId = stateId;
+    renderIndiaVectorSVG();
+
+    const emptyState = document.getElementById('detail-empty-state');
+    const contentBody = document.getElementById('detail-content-body');
+    if (emptyState) emptyState.classList.add('hidden');
+    if (contentBody) contentBody.classList.remove('hidden');
+
+    try {
+        const res = await fetch(`/regional/detail?crop=${activeRegionalCrop}&state=${stateId}`);
+        if (res.ok) {
+            const data = await res.json();
+            renderRegionDetailPanel(data);
+        }
+    } catch (err) {
+        console.error("State detail error:", err);
+    }
+}
+
+function renderRegionDetailPanel(data) {
+    const stateNameEl = document.getElementById('detail-state-name');
+    const cropTitleEl = document.getElementById('detail-crop-title');
+    const suitPillEl = document.getElementById('detail-suitability-pill');
+    const wfChipEl = document.getElementById('detail-wf-chip');
+
+    const mWater = document.getElementById('m-water-avail');
+    const mRain = document.getElementById('m-rainfall');
+    const mTemp = document.getElementById('m-temperature');
+    const mSoil = document.getElementById('m-soil');
+    const mIrrig = document.getElementById('m-irrigation');
+
+    const whyText = document.getElementById('analysis-why-text');
+    const regImpact = document.getElementById('analysis-regional-impact');
+    const cropImpact = document.getElementById('analysis-crop-impact');
+    const betterAlts = document.getElementById('analysis-better-alts');
+    const attribution = document.getElementById('detail-source-attribution');
+
+    if (stateNameEl) stateNameEl.textContent = data.region.name;
+    if (cropTitleEl) cropTitleEl.textContent = data.crop.name;
+    if (suitPillEl) suitPillEl.textContent = data.suitability.category_label;
+    if (wfChipEl) wfChipEl.textContent = `${data.crop.water_footprint_total.toLocaleString()} ${data.crop.unit}`;
+
+    if (mWater) mWater.textContent = data.sub_metrics.water_availability;
+    if (mRain) mRain.textContent = data.sub_metrics.rainfall_suitability;
+    if (mTemp) mTemp.textContent = data.sub_metrics.temperature_suitability;
+    if (mSoil) mSoil.textContent = data.sub_metrics.soil_suitability;
+    if (mIrrig) mIrrig.textContent = data.sub_metrics.irrigation_dependency;
+
+    if (whyText) whyText.textContent = data.analysis.why_explanation;
+    if (regImpact) regImpact.textContent = data.analysis.regional_impact;
+    if (cropImpact) cropImpact.textContent = data.analysis.crop_impact;
+    if (betterAlts) betterAlts.textContent = data.analysis.better_suited_alternatives;
+
+    if (attribution) {
+        attribution.textContent = `Data Source: ${data.data_attribution.source} (${data.data_attribution.source_date})`;
+    }
+}
+
+function toggleCompareMode() {
+    isCompareMode = !isCompareMode;
+    const compareBar = document.getElementById('compare-bar');
+    const btn = document.getElementById('btn-toggle-compare');
+    if (compareBar) {
+        if (isCompareMode) {
+            compareBar.classList.remove('hidden');
+            if (btn) btn.classList.add('active');
+        } else {
+            compareBar.classList.add('hidden');
+            if (btn) btn.classList.remove('active');
+        }
+    }
+}
+
+function updateComparison() {
+    const compB = document.getElementById('compare-crop-b-selector')?.value;
+    if (activeStateId && compB) {
+        fetch(`/regional/compare?crop_a=${activeRegionalCrop}&crop_b=${compB}&state=${activeStateId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.crop_a && data.crop_b) {
+                    alert(`Comparison in ${data.crop_a.region.name}:\n\n` +
+                          `${data.crop_a.crop.name}: ${data.crop_a.suitability.category_label} (${data.crop_a.crop.water_footprint_total} L/kg)\n` +
+                          `${data.crop_b.crop.name}: ${data.crop_b.suitability.category_label} (${data.crop_b.crop.water_footprint_total} L/kg)`);
+                }
+            }).catch(e => console.error("Compare error:", e));
+    }
+}
+
+function toggleCatalogExplorer() {
+    const grid = document.getElementById('catalog-grid');
+    const arrow = document.getElementById('catalog-arrow');
+    if (grid) {
+        grid.classList.toggle('hidden');
+        if (arrow) arrow.textContent = grid.classList.contains('hidden') ? '▼' : '▲';
+    }
 }
